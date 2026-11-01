@@ -138,3 +138,19 @@ body{background:#f7f8fc;color:var(--text)}
 .stage-note.registration-note p{color:#376d89}
 .stage-note.delete-note{background:#fff8e6;border-color:#fae5ac}
 .stage-note.delete-note strong{color:#88620e}
+
+/* Mawhiba screen colors – official palette shown in the supplied brand guide */
+:root{
+--royal-violet:#7A5DF5;
+--heritage-blue:#205BC3;
+--sky-cyan:#7DD2E9;
+--golden-amber:#F5BD19;
+--vibrant-blue:#4D7CCF;
+--deep-blue:#083077;
+--soft-violet:#8C8CE6;
+--deep-purple:#211964;
+--soft-sky-blue:#B0E4F1;
+--ocean-teal:#448A9C;
+--warm-coral:#E47759;
+--sand-beige:#F8E7B7;
+}
