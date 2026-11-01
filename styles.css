@@ -101,3 +101,40 @@
 .stage-note.delete-note p{color:#8a6b3c}
 @media(max-width:700px){.audience-tabs{grid-template-columns:1fr;gap:8px}.audience-tab{padding:14px 16px}.guide-phase-nav{display:grid;grid-template-columns:1fr}.guide-phase-nav a{text-align:center}.guide-stage-heading{padding:16px;gap:12px}.guide-stage-number{height:42px;width:42px;flex-basis:42px;font-size:18px}.guide-stage-heading h3{font-size:18px}.guide-stage-heading p{font-size:12px}.stage-note{padding:15px}.stage-note strong{font-size:15px}.stage-note p{font-size:13px}}
 @media print{.audience-tabs,.guide-phase-nav{display:none!important}.guide-stage{display:block!important;break-inside:auto}.guide-stage-heading{break-after:avoid;background:#eef5f7!important}.stage-note{break-inside:avoid}}
+
+/* Corporate visual identity: Mawhiba screen palette */
+:root{
+  --bg:#f7f8fc;
+  --surface:#ffffff;
+  --text:#211964;
+  --muted:#6f7893;
+  --line:#e5e5f1;
+  --primary:#205BC3;
+  --primary-dark:#083077;
+  --purple:#7A5DF5;
+  --mint:#3F988A;
+  --gold:#F5BD19;
+  --shadow:0 12px 35px rgba(33,25,100,.06);
+}
+body{background:#f7f8fc;color:var(--text)}
+.brand-symbol{color:#fff;background:linear-gradient(135deg,#7A5DF5,#205BC3)}
+.brand-copy strong,.hero h1,.section-heading h2,.guide-stage-heading h3{color:#211964}
+.hero{background:linear-gradient(116deg,#fff 0%,#f4f1ff 58%,#eaf9fc 100%);border-color:#e1dcf5;grid-template-columns:1fr;min-height:295px}
+.hero h1 span{color:#7A5DF5}
+.hero-orb.orb-one{background:rgba(125,210,233,.22)}
+.hero-orb.orb-two{border-color:rgba(122,93,245,.15)}
+.btn-primary{background:linear-gradient(110deg,#7A5DF5,#205BC3);color:#fff}
+.btn-primary:hover{background:linear-gradient(110deg,#6948e8,#164ba9)}
+.btn-ghost,.chip-button,.header-print{color:#205BC3}
+.overline,.step-eyebrow,.all-step-phase,.side-label{color:#7A5DF5}
+.audience-tab.active{background:#f2efff;border-color:#beb0f9}
+.audience-tab.active .audience-tab-icon{color:#7A5DF5;background:#e8e0ff}
+.all-step-number,.guide-stage-number{color:#6e4cee;background:#ebe7ff}
+.guide-stage-heading{background:linear-gradient(110deg,#f6f4ff,#f4fbff);border-color:#e3e1f4}
+.guide-phase-nav a{background:#f7f5ff;color:#211964;border-color:#e4ddff}
+.guide-phase-nav a:hover{background:#ece7ff}
+.step-note,.stage-note.registration-note{background:#ecf9fa;border-color:#bce7ef}
+.stage-note.registration-note strong{color:#205BC3}
+.stage-note.registration-note p{color:#376d89}
+.stage-note.delete-note{background:#fff8e6;border-color:#fae5ac}
+.stage-note.delete-note strong{color:#88620e}
