@@ -70,26 +70,12 @@
       </section>
 
       <section id="guide" class="guide-section wrap" aria-labelledby="guide-title">
-        <div class="section-heading guide-heading"><div><div class="overline">استعرض الدليل خطوة بخطوة</div><h2 id="guide-title">دليل الترشيح التفاعلي</h2><p>انتقل بين الخطوات، واضغط على الصورة لعرضها بحجم أكبر.</p></div><div class="guide-toolbar"><button type="button" class="chip-button" id="copyStepLink" title="نسخ الرابط للخطوة الحالية">⛓ مشاركة الخطوة</button><button type="button" class="chip-button" id="resetProgress">↺ إعادة التقدم</button></div></div>
-        <div class="guide-grid">
-          <aside class="step-sidebar" aria-label="فهرس الخطوات">
-            <div class="sidebar-top"><div><strong>فهرس الخطوات</strong><small><span id="doneCount">0</span> من 10 مكتملة</small></div><div class="progress-ring"><span id="progressPct">0%</span></div></div>
-            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-            <label class="search-field"><span aria-hidden="true">⌕</span><input id="stepSearch" type="search" placeholder="ابحث عن خطوة..." aria-label="ابحث عن خطوة" autocomplete="off" /></label>
-            <div class="phase-filters" role="group" aria-label="تصفية المراحل"><button class="filter-btn selected" data-filter="all" type="button">الكل</button><button class="filter-btn" data-filter="1" type="button">الأولى</button><button class="filter-btn" data-filter="2" type="button">الثانية</button><button class="filter-btn" data-filter="3" type="button">الثالثة</button></div>
-            <div class="steps-list" id="stepsList"></div>
-            <div class="sidebar-hint"><span aria-hidden="true">◉</span> يُحفظ تقدّمك محليًا على جهازك فقط.</div>
-          </aside>
-
-          <div class="step-content" aria-live="polite">
-            <div class="step-head"><div class="step-eyebrow" id="stepPart">الجزء الأول | تسجيل الدخول</div><div class="step-counter">الخطوة <strong id="stepNum">01</strong> <span>/ 10</span></div></div>
-            <div class="step-title-row"><h3 id="stepTitle">الدخول إلى لوحة التحكم</h3><span class="step-stat" id="stepStageBadge">المرحلة الأولى</span></div>
-            <p class="step-description" id="stepDescription"></p>
-            <div class="step-screenshot"><div class="screenshot-toolbar"><span class="screenshot-caption"><span class="screenshot-dot"></span><span id="screenshotTitle">صورة توضيحية</span></span><button type="button" class="zoom-button" id="zoomImage" aria-label="تكبير الصورة">⤢ تكبير الصورة</button></div><button type="button" class="screenshot-button" id="imageButton" aria-label="فتح الصورة بالحجم الكامل"><img id="stepImage" src="assets/step-01.webp" alt="صورة الخطوة الأولى" loading="eager"/><span class="image-overlay">اضغط لعرض التفاصيل والتكبير ⤢</span></button></div>
-            <div class="step-bottom"><div class="info-note"><span class="info-icon">i</span><div><strong>ملاحظة إرشادية</strong><p id="stepHint"></p></div></div><div class="step-link-wrapper" id="stepExtra"></div></div>
-            <div class="step-navigation"><button type="button" class="btn btn-outline" id="prevStep"><span>→</span> الخطوة السابقة</button><label class="completed-check"><input type="checkbox" id="completedCheck"/><span>تم الاطلاع على الخطوة</span></label><button type="button" class="btn btn-primary" id="nextStep">الخطوة التالية <span>←</span></button></div>
-          </div>
+        <div class="section-heading guide-heading">
+          <div><div class="overline">الخطوات العشر بالترتيب</div><h2 id="guide-title">خطوات ترشيح الطلبة</h2><p>جميع الخطوات معروضة أدناه، ويمكنك إخفاء كل خطوة أو إظهارها بالضغط على عنوانها.</p></div>
+          <div class="guide-toolbar"><button type="button" class="chip-button" id="expandAll">إظهار الكل</button><button type="button" class="chip-button" id="collapseAll">إخفاء الكل</button></div>
         </div>
+        <label class="all-guide-search"><span aria-hidden="true">⌕</span><input type="search" id="searchSteps" placeholder="البحث ضمن الخطوات العشر" aria-label="البحث ضمن خطوات الترشيح"></label>
+        <div id="allSteps" class="all-steps" aria-label="خطوات الترشيح"></div>
       </section>
     </main>
     <footer class="footer wrap"><span>دليل ترشيح الطلبة — البرنامج الوطني للكشف عن الموهوبين · العام السابع عشر</span><span>إرشادات الترشيح والتسجيل وفق المستندات المرفقة. تنفيذ التسجيل يتم في المنصات المعتمدة.</span></footer>

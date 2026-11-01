@@ -32,3 +32,44 @@ body[data-theme="dark"] .section-heading h2{color:#ecf6fa}
 body[data-theme="dark"] .registration-guide-icon{background:#352e59;color:#cbbcff}
 @media(max-width:860px){.hero{grid-template-columns:1fr}.registration-guide-card{align-items:stretch;flex-wrap:wrap}.registration-guide .btn{width:100%}}
 @media(max-width:560px){.registration-guide-card{padding:20px}.registration-guide-icon{width:46px;height:46px;flex-basis:46px;font-size:23px}.registration-guide h2{font-size:19px}.registration-guide-details{flex-basis:calc(100% - 68px)}}
+
+/* All steps view: expanded by default, individually collapsible */
+.all-guide-search{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:13px;min-height:52px;padding:0 17px;margin:18px 0 19px}
+.all-guide-search span{font-size:24px;color:var(--muted)}
+.all-guide-search input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--text);font-size:14px;font-weight:700}
+.all-steps{display:flex;flex-direction:column;gap:15px}
+.all-step-card{display:block;background:var(--surface);border:1px solid var(--line);border-radius:21px;box-shadow:var(--shadow);overflow:hidden;scroll-margin-top:16px}
+.all-step-card[hidden]{display:none}
+.all-step-card[open]{border-color:var(--line)}
+.all-step-header{display:flex;align-items:center;gap:15px;min-height:87px;padding:17px 24px;cursor:pointer;list-style:none;color:var(--text)}
+.all-step-header::-webkit-details-marker{display:none}
+.all-step-header::marker{content:""}
+.all-step-number{flex:0 0 47px;width:47px;height:47px;display:grid;place-items:center;background:#ede6ff;border-radius:13px;color:#7252b4;font-size:18px;font-weight:900}
+.all-step-labels{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.all-step-phase{font-size:12px;font-weight:800;color:var(--purple)}
+.all-step-title{font-weight:900;font-size:20px;line-height:1.55}
+.all-step-chevron{color:var(--muted);font-size:26px;font-weight:700;transition:transform .2s}
+.all-step-card[open] .all-step-chevron{transform:rotate(180deg)}
+.all-step-body{border-top:1px solid var(--line);padding:18px 24px 25px}
+.all-step-description{margin:0 0 19px;color:var(--text);line-height:1.9;font-size:17px;font-weight:600}
+.all-step-image{border:1px solid var(--line);border-radius:15px;padding:14px;background:#f2f5f6;width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:zoom-in}
+.all-step-image img{display:block;width:auto;max-width:100%;max-height:650px;object-fit:contain;border-radius:8px;background:white}
+.all-step-image-caption{color:#556c7d;font-size:12px;font-weight:900}
+.all-step-note{background:#eaf7f1;border:1px solid #d5ebe2;border-radius:13px;padding:13px 18px;margin:15px 0;color:#227a68}
+.all-step-note strong{font-size:14px}
+.all-step-note p{font-size:14px;line-height:1.7;margin:4px 0 0}
+body[data-theme="dark"] .all-step-number{background:#383052;color:#d9c4ff}
+body[data-theme="dark"] .all-step-image{background:#223746}
+body[data-theme="dark"] .all-step-note{background:#183c39;border-color:#2c5650;color:#b9f0dd}
+body[data-theme="dark"] .all-step-image-caption{color:#9eb6c4}
+@media(max-width:620px){.all-step-header{padding:13px 14px;gap:11px;min-height:72px}.all-step-number{width:38px;height:38px;flex-basis:38px;font-size:15px}.all-step-title{font-size:16px}.all-step-phase{font-size:10px}.all-step-body{padding:14px 12px}.all-step-description{font-size:15px}.all-step-image{padding:7px}.guide-toolbar{display:flex;gap:8px}.guide-toolbar .chip-button{flex:1}}
+@media print{
+ .topbar,.hero,.logos-wrap,.registration-guide,.footer,.lightbox,.toast,.all-guide-search,.guide-toolbar{display:none!important}
+ .guide-section,.guide-heading,.all-steps,.all-step-card,.all-step-body{display:block!important}
+ .all-step-card{box-shadow:none!important;border:1px solid #b6c6cc!important;break-inside:avoid;margin:0 0 20px;background:#fff!important;color:#123047!important}
+ .all-step-card[open] .all-step-body{display:block!important}
+ .all-step-title,.all-step-description{color:#123047!important}
+ .all-step-image{background:#fff!important}
+ .all-step-image img{max-height:150mm}
+ .all-step-note{background:#eef8f2!important;color:#265849!important}
+}

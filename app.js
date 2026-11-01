@@ -10,34 +10,125 @@ const steps=[
 {id:9,part:3,title:'تأكيد حذف الترشيح',description:'راجع رسالة التأكيد، وتحقق من اختيار الطالب الصحيح قبل الموافقة على الحذف.',caption:'رسالة تأكيد حذف الترشيح',hint:'الحذف إجراء مؤثر؛ لا توافق على رسالة التأكيد قبل التأكد من بيانات الطالب.'},
 {id:10,part:3,title:'التحقق من اكتمال الحذف',description:'تأكد من ظهور رسالة نجاح الحذف واختفاء الترشيح من القائمة.',caption:'رسالة نجاح حذف الترشيح',hint:'اكتمال العملية يظهر من رسالة النجاح وعدم بقاء الترشيح في القائمة.'}];
 const parts={1:{label:'الجزء الأول | تسجيل الدخول',short:'المرحلة الأولى'},2:{label:'الجزء الثاني | ترشيح الطلاب',short:'المرحلة الثانية'},3:{label:'الجزء الثالث | متابعة الترشيحات والحذف',short:'المرحلة الثالثة'}};
-const byId=id=>document.getElementById(id);
-let current=1,filter='all',query='',done=new Set(),zoom=1,toastTimer=0;
-try{const saved=JSON.parse(localStorage.getItem('mawhiba-guide-completed')||'[]');done=new Set(saved.filter(n=>Number.isInteger(n)&&n>=1&&n<=10));}catch(e){}
-try{const theme=localStorage.getItem('mawhiba-guide-theme');if(theme==='dark'||theme==='light')document.body.dataset.theme=theme;}catch(e){}
-function pic(id){return `assets/step-${String(id).padStart(2,'0')}.webp`}
-function saveDone(){try{localStorage.setItem('mawhiba-guide-completed',JSON.stringify([...done]));}catch(e){}}
-function showToast(s){const el=byId('toast');el.textContent=s;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500)}
-function setProgress(){const count=done.size,percent=Math.round(count/10*100);byId('doneCount').textContent=count;byId('progressPct').textContent=percent+'%';byId('progressFill').style.width=percent+'%';document.querySelector('.progress-ring').style.background=`conic-gradient(#159187 ${percent*3.6}deg,#e6efed 0deg)`}
-function renderIndex(){const list=byId('stepsList');list.replaceChildren();let matched=steps.filter(s=>(filter==='all'||s.part===Number(filter))&&(!query||(`${s.title} ${s.description}`.includes(query))));for(const s of matched){const b=document.createElement('button');b.type='button';b.className='step-index'+(s.id===current?' selected':'');b.dataset.step=s.id;b.setAttribute('aria-current',s.id===current?'step':'false');const n=document.createElement('span');n.className='step-index-number';n.textContent=String(s.id).padStart(2,'0');const t=document.createElement('span');t.className='step-index-title';t.textContent=s.title;b.append(n,t);if(done.has(s.id)){const check=document.createElement('span');check.className='step-index-done';check.textContent='✓';b.append(check)}b.onclick=()=>navigate(s.id,true);list.append(b)}if(!matched.length){const p=document.createElement('p');p.className='empty-search';p.textContent='لا توجد خطوات تطابق البحث.';list.append(p)}}
-function navigate(id,scroll=false){id=Math.max(1,Math.min(10,Number(id)||1));current=id;const s=steps[id-1];byId('stepPart').textContent=parts[s.part].label;byId('stepStageBadge').textContent=parts[s.part].short;byId('stepNum').textContent=String(id).padStart(2,'0');byId('stepTitle').textContent=s.title;byId('stepDescription').textContent=s.description;byId('stepHint').textContent=s.hint;byId('screenshotTitle').textContent=s.caption;byId('stepImage').src=pic(id);byId('stepImage').alt=s.caption+' — الخطوة '+id;byId('prevStep').disabled=id===1;byId('nextStep').textContent=id===10?'العودة إلى الخطوة الأولى':'الخطوة التالية ←';byId('completedCheck').checked=done.has(id);byId('stepExtra').replaceChildren();if(s.link){const l=document.createElement('a');l.className='inline-portal';l.href=s.link;l.target='_blank';l.rel='noopener noreferrer';l.textContent='فتح لوحة التحكم ↗';byId('stepExtra').append(l)}if(document.querySelector('#imageDialog[open]')){updateModal()}renderIndex();if(location.hash!==`#step-${id}`){history.replaceState(null,'',`#step-${id}`)}if(scroll){byId('guide').scrollIntoView({behavior:'smooth',block:'start'})}}
-function getHashStep(){const m=location.hash.match(/^#step-(\d+)$/);return m?Number(m[1]):null}
-function openModal(){zoom=1;byId('imageDialog').showModal();updateModal()}
-function updateModal(){const s=steps[current-1];byId('lightboxImage').src=pic(current);byId('lightboxImage').alt=s.caption;byId('lightboxTitle').textContent=`${s.title} — ${s.caption}`;byId('modalCounter').textContent=`${current} / 10`;applyZoom()}
-function applyZoom(){const im=byId('lightboxImage'),view=byId('lightboxViewer');const nw=im.naturalWidth||1530,nh=im.naturalHeight||860;const fit=Math.min((view.clientWidth-24)/nw,(view.clientHeight-24)/nh,1);const w=Math.max(80,Math.round(nw*Math.max(.1,fit)*zoom));im.style.width=w+'px';im.style.height='auto';im.style.maxWidth='none';im.style.maxHeight='none';im.style.transform='none';view.style.placeItems=zoom>1?'start':'center';byId('zoomLevel').textContent=Math.round(zoom*100)+'%';view.scrollTop=0;view.scrollLeft=0}
-function makePrint(){const parent=byId('printAll');steps.forEach(s=>{const page=document.createElement('section');page.className='print-page';const head=document.createElement('div');head.className='print-heading';head.textContent=`دليل ترشيح الطلبة | العام السابع عشر — ${parts[s.part].label}`;const h2=document.createElement('h2');h2.textContent=String(s.id).padStart(2,'0')+' · '+s.title;const p=document.createElement('p');p.textContent=s.description;const im=document.createElement('img');im.src=pic(s.id);im.alt=s.caption;const caption=document.createElement('div');caption.className='print-caption';caption.textContent=s.caption;page.append(head,h2,p,im,caption);parent.append(page)})}
-byId('stepsList').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)navigate(Number(b.dataset.step),true)});
-document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>navigate(Number(b.dataset.goto),true));
-document.querySelectorAll('.filter-btn').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('.filter-btn').forEach(x=>x.classList.toggle('selected',x===b));renderIndex()});
-byId('stepSearch').oninput=e=>{query=e.target.value.trim();renderIndex()};
-byId('prevStep').onclick=()=>navigate(current-1);
-byId('nextStep').onclick=()=>navigate(current===10?1:current+1);
-byId('completedCheck').onchange=e=>{if(e.target.checked)done.add(current);else done.delete(current);saveDone();setProgress();renderIndex()};
-byId('resetProgress').onclick=()=>{if(!done.size){showToast('لم يتم تحديد أي خطوات مكتملة');return}if(window.confirm('هل تريد إعادة ضبط تقدّمك في الدليل؟')){done.clear();saveDone();setProgress();renderIndex();byId('completedCheck').checked=false;showToast('تمت إعادة ضبط التقدم')}};
-byId('copyStepLink').onclick=async()=>{const url=location.origin+location.pathname+'#step-'+current;try{await navigator.clipboard.writeText(url);showToast('تم نسخ رابط الخطوة')}catch(e){const t=document.createElement('textarea');t.value=url;document.body.append(t);t.select();document.execCommand('copy');t.remove();showToast('تم نسخ رابط الخطوة')}};
-byId('printButton').onclick=()=>window.print();
-byId('themeToggle').onclick=()=>{const dark=document.body.dataset.theme==='dark';document.body.dataset.theme=dark?'light':'dark';try{localStorage.setItem('mawhiba-guide-theme',dark?'light':'dark')}catch(e){}syncTheme()};
-function syncTheme(){const dark=document.body.dataset.theme==='dark';byId('themeIcon').textContent=dark?'☀':'☾';byId('themeToggle').setAttribute('aria-label',dark?'التبديل إلى الوضع الفاتح':'التبديل إلى الوضع الليلي')}
-byId('lightboxImage').onload=applyZoom;byId('zoomImage').onclick=openModal;byId('imageButton').onclick=openModal;byId('lightboxClose').onclick=()=>byId('imageDialog').close();byId('imageDialog').addEventListener('click',e=>{if(e.target===byId('imageDialog'))byId('imageDialog').close()});byId('zoomIn').onclick=()=>{zoom=Math.min(3,zoom+.25);applyZoom()};byId('zoomOut').onclick=()=>{zoom=Math.max(.75,zoom-.25);applyZoom()};byId('zoomReset').onclick=()=>{zoom=1;applyZoom()};byId('modalPrev').onclick=()=>navigate(current===1?10:current-1);byId('modalNext').onclick=()=>navigate(current===10?1:current+1);
-document.addEventListener('keydown',e=>{if(!byId('imageDialog').open)return;if(e.key==='ArrowLeft'){e.preventDefault();navigate(current===10?1:current+1)}if(e.key==='ArrowRight'){e.preventDefault();navigate(current===1?10:current-1)}if(e.key==='+'){zoom=Math.min(3,zoom+.25);applyZoom()}if(e.key==='-'){zoom=Math.max(.75,zoom-.25);applyZoom()}});
-window.addEventListener('hashchange',()=>{const id=getHashStep();if(id)navigate(id)});
-makePrint();setProgress();syncTheme();navigate(getHashStep()||1);
+
+const byId = id => document.getElementById(id);
+const pic = id => "assets/step-" + String(id).padStart(2,"0") + ".webp";
+const allSteps = byId("allSteps");
+let focusedImage=1;
+let zoom=1;
+
+try {
+  const savedTheme=localStorage.getItem("mawhiba-guide-theme");
+  if (savedTheme==="light" || savedTheme==="dark") document.body.dataset.theme=savedTheme;
+} catch(e) {}
+
+function syncTheme(){
+ const dark=document.body.dataset.theme==="dark";
+ byId("themeIcon").textContent=dark?"☀":"☾";
+ byId("themeToggle").setAttribute("aria-label",dark?"التبديل إلى الوضع الفاتح":"التبديل إلى الوضع الليلي");
+}
+byId("themeToggle").addEventListener("click",()=>{
+ const next=document.body.dataset.theme==="dark"?"light":"dark";
+ document.body.dataset.theme=next;
+ try {localStorage.setItem("mawhiba-guide-theme",next);}catch(e){}
+ syncTheme();
+});
+function make(tag,className,text){
+ const el=document.createElement(tag);
+ if(className)el.className=className;
+ if(text!==undefined)el.textContent=text;
+ return el;
+}
+function createStep(s){
+ const item=make("details","all-step-card");
+ item.id="step-"+String(s.id).padStart(2,"0");
+ item.dataset.part=String(s.part);
+ item.open=true;
+ const heading=make("summary","all-step-header");
+ const badge=make("span","all-step-number",String(s.id).padStart(2,"0"));
+ const labels=make("span","all-step-labels");
+ const phase=make("span","all-step-phase",parts[s.part].label);
+ const title=make("strong","all-step-title",s.title);
+ labels.append(phase,title);
+ heading.append(badge,labels,make("span","all-step-chevron","⌄"));
+ const content=make("div","all-step-body");
+ const desc=make("p","all-step-description",s.description);
+ const imageButton=make("button","all-step-image");
+ imageButton.type="button";
+ imageButton.setAttribute("aria-label","تكبير صورة "+s.caption);
+ const image=make("img");
+ image.loading=s.id<3?"eager":"lazy";
+ image.src=pic(s.id);
+ image.alt=s.caption+" — الخطوة "+s.id;
+ const imageCaption=make("span","all-step-image-caption","⤢ اضغط على الصورة لتكبيرها");
+ imageButton.append(image,imageCaption);
+ imageButton.onclick=()=>openImage(s.id);
+ const note=make("div","all-step-note");
+ const noteTitle=make("strong","","ملاحظة إرشادية");
+ const noteBody=make("p","",s.hint);
+ note.append(noteTitle,noteBody);
+ content.append(desc,imageButton,note);
+ if(s.link){
+  const link=make("a","inline-portal","فتح لوحة التحكم ↗");
+  link.href=s.link;link.target="_blank";link.rel="noopener noreferrer";
+  content.append(link);
+ }
+ item.append(heading,content);
+ return item;
+}
+steps.forEach(s=>allSteps.append(createStep(s)));
+byId("expandAll").onclick=()=>document.querySelectorAll("details.all-step-card").forEach(el=>el.open=true);
+byId("collapseAll").onclick=()=>document.querySelectorAll("details.all-step-card").forEach(el=>el.open=false);
+byId("searchSteps").addEventListener("input",e=>{
+ const q=e.target.value.trim().toLowerCase();
+ document.querySelectorAll("details.all-step-card").forEach((el,i)=>{
+  const s=steps[i];el.hidden=!!q&&!((s.title+" "+s.description+" "+s.caption+" "+s.hint).toLowerCase().includes(q));
+  if(q&&!el.hidden)el.open=true;
+ });
+});
+function openImage(id){
+ focusedImage=id;zoom=1;
+ const dialog=byId("imageDialog");
+ if(!dialog.open)dialog.showModal();
+ refreshImage();
+}
+function refreshImage(){
+ const s=steps[focusedImage-1];
+ const im=byId("lightboxImage");
+ im.src=pic(focusedImage);
+ im.alt=s.caption;
+ byId("lightboxTitle").textContent=s.title+" — "+s.caption;
+ byId("modalCounter").textContent=focusedImage+" / "+steps.length;
+ applyZoom();
+}
+function applyZoom(){
+ const img=byId("lightboxImage");
+ img.style.width="";
+ img.style.maxWidth="100%";
+ img.style.maxHeight="100%";
+ img.style.transform="scale("+zoom+")";
+ byId("zoomLevel").textContent=Math.round(zoom*100)+"%";
+}
+byId("zoomIn").onclick=()=>{zoom=Math.min(3,zoom+.25);applyZoom()};
+byId("zoomOut").onclick=()=>{zoom=Math.max(.75,zoom-.25);applyZoom()};
+byId("zoomReset").onclick=()=>{zoom=1;applyZoom()};
+byId("modalPrev").onclick=()=>{focusedImage=focusedImage===1?steps.length:focusedImage-1;zoom=1;refreshImage()};
+byId("modalNext").onclick=()=>{focusedImage=focusedImage===steps.length?1:focusedImage+1;zoom=1;refreshImage()};
+byId("lightboxClose").onclick=()=>byId("imageDialog").close();
+byId("imageDialog").addEventListener("click",e=>{if(e.target===byId("imageDialog"))byId("imageDialog").close()});
+document.addEventListener("keydown",e=>{
+ if(!byId("imageDialog").open)return;
+ if(e.key==="ArrowLeft"){e.preventDefault();byId("modalNext").click();}
+ if(e.key==="ArrowRight"){e.preventDefault();byId("modalPrev").click();}
+});
+byId("printButton").onclick=()=>window.print();
+let wasOpen=[];
+window.addEventListener("beforeprint",()=>{
+ wasOpen=[...document.querySelectorAll("details.all-step-card")].map(el=>el.open);
+ document.querySelectorAll("details.all-step-card").forEach(el=>{el.open=true;el.hidden=false;});
+});
+window.addEventListener("afterprint",()=>{
+ document.querySelectorAll("details.all-step-card").forEach((el,i)=>el.open=wasOpen[i]??true);
+ byId("searchSteps").dispatchEvent(new Event("input"));
+});
+syncTheme();
