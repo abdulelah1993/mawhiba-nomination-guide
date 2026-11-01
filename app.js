@@ -1,15 +1,103 @@
 const steps=[
-{id:1,part:1,title:'الدخول إلى لوحة التحكم',description:'افتح رابط لوحة التحكم، ثم أدخل رقم الهوية. إذا لم يكن لديك حساب، اختر «تسجيل جديد».',caption:'صفحة تسجيل الدخول',link:'https://admin.mawhiba.sa/'},
-{id:2,part:1,title:'التحقق من الحساب',description:'أدخل رمز التحقق المرسل إلى رقم جوالك، ثم أكمل تسجيل الدخول.',caption:'نافذة إدخال رمز التحقق'},
-{id:3,part:2,title:'فتح البرنامج الوطني للكشف عن الموهوبين',description:'من الصفحة الرئيسية للوحة التحكم، اختر «البرنامج الوطني للكشف عن الموهوبين».',caption:'الصفحة الرئيسية للوحة التحكم'},
-{id:4,part:2,title:'الانتقال إلى صفحة ترشيح الطلاب',description:'من القائمة الجانبية، انقر على «مسؤول الدعم»، ثم اختر «ترشيح الطلاب» للانتقال إلى صفحة الترشيح.',caption:'القائمة الجانبية للبرنامج'},
-{id:5,part:2,title:'إدخال بيانات الترشيح',description:'اختر الصف الدراسي، ثم أدخل أرقام هويات الطلبة في الحقل المخصص، واضغط «إضافة».',caption:'صفحة إضافة الترشيحات'},
-{id:6,part:2,title:'مراجعة نتيجة الترشيح',description:'راجع النتائج التي تظهر بعد الإضافة، وتحقق من حالة ترشيح كل طالب.',caption:'نتائج إضافة الترشيحات'},
-{id:7,part:3,title:'عرض تقرير الترشيحات وتصديره',description:'من القائمة، افتح «تقرير الترشيحات» للاطلاع على بيانات الطلبة وحالاتهم. ولتنزيل البيانات، اضغط «تصدير لإكسل».',caption:'تقرير الترشيحات وخيار التصدير'},
-{id:8,part:3,title:'البحث عن طالب وحذف ترشيحه',description:'أدخل رقم هوية الطالب، ثم اضغط «بحث». ولحذف ترشيحه، اختر «حذف» من خيار الحذف.',caption:'البحث عن الطالب في تقرير الترشيحات'},
-{id:9,part:3,title:'تأكيد حذف الترشيح',description:'راجع رسالة التأكيد، وتحقق من اختيار الطالب الصحيح قبل الموافقة على الحذف.',caption:'رسالة تأكيد حذف الترشيح'},
-{id:10,part:3,title:'التحقق من اكتمال الحذف',description:'تأكد من ظهور رسالة نجاح الحذف واختفاء الترشيح من القائمة.',caption:'رسالة نجاح حذف الترشيح'}];
-const parts={1:{label:'الجزء الأول | تسجيل الدخول',short:'المرحلة الأولى'},2:{label:'الجزء الثاني | ترشيح الطلاب',short:'المرحلة الثانية'},3:{label:'الجزء الثالث | متابعة الترشيحات والحذف',short:'المرحلة الثالثة'}};
+  {
+    "id": 1,
+    "part": 1,
+    "imageId": 1,
+    "title": "الدخول إلى لوحة التحكم",
+    "description": "افتح رابط لوحة التحكم، ثم أدخل رقم الهوية وتابع تسجيل الدخول إلى الحساب.",
+    "caption": "صفحة تسجيل الدخول",
+    "link": "https://admin.mawhiba.sa/"
+  },
+  {
+    "id": 2,
+    "part": 1,
+    "imageId": 2,
+    "title": "التحقق من الحساب",
+    "description": "أدخل رمز التحقق المرسل إلى رقم جوالك، ثم أكمل تسجيل الدخول.",
+    "caption": "نافذة إدخال رمز التحقق"
+  },
+  {
+    "id": 3,
+    "part": 1,
+    "imageId": 3,
+    "title": "فتح البرنامج الوطني للكشف عن الموهوبين",
+    "description": "من الصفحة الرئيسية للوحة التحكم، اختر «البرنامج الوطني للكشف عن الموهوبين».",
+    "caption": "الصفحة الرئيسية للوحة التحكم"
+  },
+  {
+    "id": 4,
+    "part": 1,
+    "imageId": 4,
+    "title": "الوصول إلى خيار ترشيح الطلاب",
+    "description": "من القائمة الجانبية، اختر «مسؤول الدعم»، ثم «ترشيح الطلاب» للوصول إلى صفحة الترشيح.",
+    "caption": "القائمة الجانبية للبرنامج"
+  },
+  {
+    "id": 5,
+    "part": 2,
+    "imageId": 5,
+    "title": "إدخال بيانات الترشيح",
+    "description": "اختر الصف الدراسي، ثم أدخل أرقام هويات الطلبة في الحقل المخصص، واضغط «إضافة».",
+    "caption": "صفحة إضافة الترشيحات"
+  },
+  {
+    "id": 6,
+    "part": 2,
+    "imageId": 6,
+    "title": "مراجعة نتيجة الترشيح",
+    "description": "راجع النتائج التي تظهر بعد الإضافة، وتحقق من حالة ترشيح كل طالب.",
+    "caption": "نتائج إضافة الترشيحات"
+  },
+  {
+    "id": 7,
+    "part": 2,
+    "imageId": 8,
+    "title": "البحث عن طالب وحذف ترشيحه",
+    "description": "في حال الرغبة بحذف ترشيح أحد الطلبة، افتح تقرير الترشيحات وأدخل رقم هوية الطالب، ثم اضغط «بحث» واختر «حذف» للطالب المقصود.",
+    "caption": "البحث عن الطالب في تقرير الترشيحات"
+  },
+  {
+    "id": 8,
+    "part": 2,
+    "imageId": 9,
+    "title": "تأكيد حذف الترشيح",
+    "description": "راجع رسالة التأكيد، وتحقق من اختيار الطالب الصحيح قبل الموافقة على الحذف.",
+    "caption": "رسالة تأكيد حذف الترشيح"
+  },
+  {
+    "id": 9,
+    "part": 2,
+    "imageId": 10,
+    "title": "التحقق من اكتمال الحذف",
+    "description": "تأكد من ظهور رسالة نجاح الحذف واختفاء الترشيح من القائمة.",
+    "caption": "رسالة نجاح حذف الترشيح"
+  },
+  {
+    "id": 10,
+    "part": 3,
+    "imageId": 7,
+    "title": "عرض تقرير الترشيحات وتصديره",
+    "description": "من القائمة، افتح «تقرير الترشيحات» للاطلاع على بيانات الطلبة وحالاتهم. ولتنزيل البيانات، اضغط «تصدير لإكسل».",
+    "caption": "تقرير الترشيحات وخيار التصدير"
+  }
+];
+const parts={
+  "1": {
+    "label": "المرحلة الأولى | من تسجيل الدخول إلى خيار الترشيح",
+    "title": "الدخول والوصول إلى خيار الترشيح",
+    "description": "الدخول إلى لوحة التحكم، والتحقق من الحساب، ثم الانتقال إلى خيار ترشيح الطلاب."
+  },
+  "2": {
+    "label": "المرحلة الثانية | من الترشيح إلى الحذف",
+    "title": "ترشيح الطلبة وحذف الترشيحات",
+    "description": "إضافة الترشيحات ومراجعة النتائج، ثم إجراءات الحذف عند الحاجة."
+  },
+  "3": {
+    "label": "المرحلة الثالثة | التقارير الإدارية",
+    "title": "التقارير الإدارية",
+    "description": "الاطلاع على تقرير الترشيحات وتصدير بياناته للمراجعة."
+  }
+};
 
 const byId = id => document.getElementById(id);
 const pic = id => "assets/step-" + String(id).padStart(2,"0") + ".webp";
@@ -43,7 +131,7 @@ function createStep(s){
  imageButton.setAttribute("aria-label","تكبير صورة "+s.caption);
  const image=make("img");
  image.loading=s.id<3?"eager":"lazy";
- image.src=pic(s.id);
+ image.src=pic(s.imageId);
  image.alt=s.caption+" — الخطوة "+s.id;
  const imageCaption=make("span","all-step-image-caption","⤢ اضغط على الصورة لتكبيرها");
  imageButton.append(image,imageCaption);
@@ -57,7 +145,33 @@ function createStep(s){
  item.append(heading,content);
  return item;
 }
-steps.forEach(s=>allSteps.append(createStep(s)));
+
+function stageNote(type,title,body){
+  const box=make("div","stage-note "+type);
+  box.append(make("strong","",title),make("p","",body));
+  return box;
+}
+for(const part of [1,2,3]){
+  const info=parts[part];
+  const group=make("section","guide-stage");
+  group.id="phase-"+part;
+  group.dataset.part=String(part);
+  const head=make("div","guide-stage-heading");
+  const number=make("span","guide-stage-number",String(part).padStart(2,"0"));
+  const copy=make("div","guide-stage-copy");
+  copy.append(make("div","overline",info.label),make("h3","",info.title),make("p","",info.description));
+  head.append(number,copy);
+  group.append(head);
+  for(const s of steps.filter(x=>x.part===part)){
+    if(s.id===7)group.append(stageNote("delete-note","في حال الرغبة بالحذف","يمكن لمسؤول الدعم البحث عن الطالب برقم الهوية داخل تقرير الترشيحات، ثم اختيار «حذف». يجب التأكد من الطالب الصحيح قبل الموافقة على الحذف ومراجعة رسالة نجاح العملية."));
+    group.append(createStep(s));
+  }
+  if(part===1){
+    group.append(stageNote("registration-note","مسؤولية التسجيل بعد الترشيح","بعد إتمام ترشيح الطالب، تقع مسؤولية التسجيل في مقياس موهبة وحجز الموعد على الطالب أو ولي أمره، وليس على مسؤول الدعم."));
+  }
+  allSteps.append(group);
+}
+
 byId("expandAll").onclick=()=>document.querySelectorAll("details.all-step-card").forEach(el=>el.open=true);
 byId("collapseAll").onclick=()=>document.querySelectorAll("details.all-step-card").forEach(el=>el.open=false);
 byId("searchSteps").addEventListener("input",e=>{
@@ -65,6 +179,9 @@ byId("searchSteps").addEventListener("input",e=>{
  document.querySelectorAll("details.all-step-card").forEach((el,i)=>{
   const s=steps[i];el.hidden=!!q&&!((s.title+" "+s.description+" "+s.caption).toLowerCase().includes(q));
   if(q&&!el.hidden)el.open=true;
+ });
+ document.querySelectorAll(".guide-stage").forEach(group=>{
+   group.hidden=!!q&&![...group.querySelectorAll(".all-step-card")].some(step=>!step.hidden);
  });
 });
 function openImage(id){
@@ -76,7 +193,7 @@ function openImage(id){
 function refreshImage(){
  const s=steps[focusedImage-1];
  const im=byId("lightboxImage");
- im.src=pic(focusedImage);
+ im.src=pic(s.imageId);
  im.alt=s.caption;
  byId("lightboxTitle").textContent=s.title+" — "+s.caption;
  byId("modalCounter").textContent=focusedImage+" / "+steps.length;
