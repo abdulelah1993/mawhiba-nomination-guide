@@ -13,7 +13,7 @@ const parts={1:{label:'الجزء الأول | تسجيل الدخول',short:'�
 const byId=id=>document.getElementById(id);
 let current=1,filter='all',query='',done=new Set(),zoom=1,toastTimer=0;
 try{const saved=JSON.parse(localStorage.getItem('mawhiba-guide-completed')||'[]');done=new Set(saved.filter(n=>Number.isInteger(n)&&n>=1&&n<=10));}catch(e){}
-try{const theme=localStorage.getItem('mawhiba-guide-theme');if(theme==='dark')document.body.dataset.theme='dark';}catch(e){}
+try{const theme=localStorage.getItem('mawhiba-guide-theme');if(theme==='dark'||theme==='light')document.body.dataset.theme=theme;}catch(e){}
 function pic(id){return `assets/step-${String(id).padStart(2,'0')}.webp`}
 function saveDone(){try{localStorage.setItem('mawhiba-guide-completed',JSON.stringify([...done]));}catch(e){}}
 function showToast(s){const el=byId('toast');el.textContent=s;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500)}
