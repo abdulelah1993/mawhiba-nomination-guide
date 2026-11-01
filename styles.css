@@ -154,3 +154,11 @@ body{background:#f7f8fc;color:var(--text)}
 --warm-coral:#E47759;
 --sand-beige:#F8E7B7;
 }
+
+/* Clear full-resolution screenshots and direct original-size viewing */
+.all-step-image{background:#fff;padding:10px;overflow:auto}
+.all-step-image img{display:block;width:auto;max-width:100%;max-height:none;height:auto;object-fit:contain;image-rendering:auto}
+.screenshot-original-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;margin:13px 0 0;padding:10px 15px;border-radius:12px;border:1px solid #d8d0f2;background:#f4f1ff;color:#5e45a8;font-size:13px;font-weight:900}
+.screenshot-original-link:hover{background:#ebe5fd;border-color:#bcaff0}
+@media(max-width:650px){.all-step-image img{width:100%;max-width:100%}.screenshot-original-link{width:100%}}
+@media print{.screenshot-original-link{display:none!important}}

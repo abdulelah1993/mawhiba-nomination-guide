@@ -137,6 +137,12 @@ function createStep(s){
  imageButton.append(image,imageCaption);
  imageButton.onclick=()=>openImage(s.id);
  content.append(desc,imageButton);
+ const originalLink=make("a","screenshot-original-link","↗ فتح الصورة بالحجم الأصلي");
+ originalLink.href=pic(s.imageId);
+ originalLink.target="_blank";
+ originalLink.rel="noopener noreferrer";
+ originalLink.setAttribute("aria-label","عرض صورة الخطوة "+s.id+" بالحجم الأصلي");
+ content.append(originalLink);
  if(s.link){
   const link=make("a","inline-portal","فتح لوحة التحكم ↗");
   link.href=s.link;link.target="_blank";link.rel="noopener noreferrer";
@@ -165,7 +171,7 @@ for(const part of [1,2,3]){
   for(const s of steps.filter(x=>x.part===part)){
     group.append(createStep(s));
     if(s.id===6)group.append(stageNote("registration-note","مسؤولية التسجيل بعد الترشيح","بعد إتمام ترشيح الطالب، تقع مسؤولية التسجيل في مقياس موهبة وحجز الموعد على الطالب أو ولي أمره، وليس على مسؤول الدعم."));
-    if(s.id===9)group.append(stageNote("delete-note","في حال الرغبة بالحذف","يمكن لمسؤول الدعم البحث عن الطالب برقم الهوية داخل تقرير الترشيحات، ثم اختيار «حذف». يجب التأكد من الطالب الصحيح قبل الموافقة على الحذف ومراجعة رسالة نجاح العملية."));
+    if(s.id===7)group.append(stageNote("delete-note","في حال الرغبة بالحذف","يمكن لمسؤول الدعم البحث عن الطالب برقم الهوية داخل تقرير الترشيحات، ثم اختيار «حذف». يجب التأكد من الطالب الصحيح قبل الموافقة على الحذف ومراجعة رسالة نجاح العملية."));
   }
   allSteps.append(group);
 }
