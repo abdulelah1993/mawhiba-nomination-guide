@@ -1,21 +1,13 @@
-# الدليل الإرشادي لأداء اختبار أولمبياد الموهبة الوطني
+# دليل أولمبياد الموهبة الوطني – هوية موهبة
 
-موقع مستقل، في صفحة واحدة قابلة للبحث، مع إمكانية إظهار صورة كل خطوة أو إخفائها، وإظهار الصور كلها أو إخفائها دفعة واحدة. يتضمن 21 خطوة أداء و7 موضوعات إرشادية. الصور مضمنة في index.html، ولا يحتاج الموقع لأي قاعدة بيانات أو خادم تطبيقات.
+الصفحة المستقلة تتضمن ٢١ خطوة و٧ موضوعات إرشادية. الصور ظاهرة مباشرة لكل خطوة، وتمت إزالة أزرار إظهار الصورة وروابط الصورة وبيانات رقم الصفحة ودقيقة التسجيل من الواجهة. تصميم متجاوب بهوية مماثلة لدليل الترشيح، وشعار موهبة من assets/mawhiba.webp. لم تتغير بيانات الخطوات.
 
-## انشر موقعًا مستقلًا على Render
+## النشر
 
-[نشر موقع جديد مستقل على Render](https://render.com/deploy?repo=https://github.com/abdulelah1993/mawhiba-nomination-guide/tree/olympiad-guide-standalone)
+Render Static Site: mawhiba-olympiad-guide
 
-بعد تسجيل الدخول إلى حسابك على Render، راجع إعدادات الخدمة باسم **mawhiba-olympiad-guide** ووافق على إنشاء خدمة Static Site جديدة. ستمنحك Render رابطًا مستقلًا خاصًا بالخدمة بعد نجاح النشر. **هذه ليست إعادة نشر أو تحديثًا لخدمة دليل الترشيح.**
+Build: `mkdir -p public/assets && cp index.html public/index.html && cp assets/mawhiba.webp public/assets/mawhiba.webp`
 
-### النشر اليدوي
+Publish directory: `public`
 
-- المستودع: https://github.com/abdulelah1993/mawhiba-nomination-guide
-- الفرع: `olympiad-guide-standalone`
-- النوع: Static Site
-- Build command: `mkdir -p public && cp index.html public/index.html`
-- Publish directory: `public`
-
-## المصدر والتوضيح
-
-الخطوات مأخوذة من ملف «دليل اللقاء الإرشادي للاختبار» وتتعلق باختبارات أولمبياد الموهبة الوطني على منصة كلاسيرا، وليست خطوات مقياس موهبة الخاص بالبرنامج الوطني للكشف عن الموهوبين.
+Source: `olympiad-guide-standalone` branch.
