@@ -2,7 +2,7 @@ services:
   - type: web
     name: mawhiba-nomination-guide
     runtime: static
-    buildCommand: mkdir -p public && cp -R index.html guide-registration.html styles.css app.js assets virtual-classes public/
+    buildCommand: mkdir -p public && cp -R index.html guide-registration.html styles.css app.js assets virtual-classes olympiad-exam public/
     staticPublishPath: ./public
     headers:
       - path: /*
