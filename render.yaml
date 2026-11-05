@@ -2,7 +2,7 @@ services:
   - type: web
     name: mawhiba-olympiad-guide
     runtime: static
-    buildCommand: mkdir -p public/assets && cp index.html public/index.html && cp assets/mawhiba.webp public/assets/mawhiba.webp
+    buildCommand: mkdir -p public && cp index.html public/index.html
     staticPublishPath: ./public
     headers:
       - path: /*
