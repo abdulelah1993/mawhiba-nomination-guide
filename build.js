@@ -483,10 +483,6 @@ function renderStep(step) {
         <span class="number">الخطوة ${n} من 21</span>
         <h2>${title}</h2>
         <p>${description}</p>
-        <label class="done">
-          <input type="checkbox" data-step="${n}">
-          أنجزت هذه الخطوة
-        </label>
       </div>
       <button class="image-button" data-image="${image}"
         data-caption="الخطوة ${n}: ${title}"
