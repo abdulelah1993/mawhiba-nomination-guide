@@ -752,3 +752,55 @@ if (fs.existsSync(assetsSource)) {
 }
 
 console.log("تم إنشاء الصفحات السبع داخل dist/");
+;(function mergeStages() {
+  const unifiedPages=[
+    {id:"home",file:"index.html",title:"الرئيسية",icon:"⌂"},
+    {id:"before",file:"before.html",title:"قبل الاختبار",icon:"▣"},
+    {id:"steps",file:"steps.html",title:"خطوات الدخول وأداء المقياس",icon:"↪"},
+    {id:"help",file:"help.html",title:"المساعدة والدعم",icon:"?"}
+  ];
+  pages.splice(0,pages.length,...unifiedPages);
+  const journey=Object.entries(stages);
+  const stageCards=(prefix="")=>`<nav class="stage-index" id="stage-top" aria-label="الانتقال بين مراحل المقياس">${journey.map(([id,stage],i)=>`<a class="stage-jump" href="${prefix}#${id}"><span class="stage-jump-num">0${i+1}</span><span class="stage-jump-title">${stage.title}</span><small>الخطوات ${stage.range}</small></a>`).join("")}</nav>`;
+  const fullJourney=`<section class="hero"><span class="eyebrow">الدليل المصور · ٢١ خطوة</span><h1>خطوات الدخول وأداء مقياس موهبة التجريبي</h1><p>كل المراحل الأربع في صفحة واحدة، من تسجيل الدخول حتى التسليم النهائي.</p></section>${stageCards()}<div class="all-stages">${journey.map(([id,stage],i)=>`<section class="stage-section" id="${id}" aria-labelledby="title-${id}"><div class="stage-heading"><span class="stage-number">0${i+1}</span><div><span class="eyebrow">${stage.label} · الخطوات ${stage.range}</span><h2 id="title-${id}">${stage.title}</h2><p>${stage.description}</p></div><a href="#stage-top" class="back-to-stages">العودة للمراحل ↑</a></div><div class="steps">${steps.filter(s=>s[4]===id).map(renderStep).join("")}</div></section>`).join("")}</div>`;
+  const unifiedStyle=`
+.stage-index{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0 28px;scroll-margin-top:100px}
+.stage-jump{border:1px solid var(--border);background:#fff;border-radius:17px;padding:17px 15px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px;min-width:0;transition:border-color .2s,transform .2s}
+.stage-jump:hover,.stage-jump:focus-visible{border-color:var(--blue);transform:translateY(-2px)}
+.stage-jump-num{color:var(--blue);font-weight:800;background:#eaf1ff;font-size:13px;width:37px;height:32px;border-radius:10px;display:grid;place-items:center}
+.stage-jump-title{color:var(--navy);font-size:16px;font-weight:800;line-height:1.45;margin-top:7px}
+.stage-jump small{color:var(--teal);font-size:13px;font-weight:700}
+.stage-section{margin:38px 0 50px;scroll-margin-top:105px}
+.stage-heading{display:flex;align-items:center;gap:18px;border:1px solid #dde7f3;border-right:5px solid var(--blue);background:#fff;padding:19px 23px;border-radius:18px;margin-bottom:18px}
+.stage-heading h2{font-size:25px;margin:2px 0}.stage-heading p{margin:0;color:#5d7383;font-size:15px}
+.stage-number{display:grid;place-items:center;border-radius:17px;flex:0 0 59px;height:59px;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-size:22px;font-weight:900}
+.back-to-stages{margin-right:auto;white-space:nowrap;font-size:13px;color:var(--blue);font-weight:700;border:1px solid #dbe6f4;border-radius:12px;padding:8px 11px}
+.home-stages{margin-top:30px}.home-stages h2{margin:0 0 4px}.home-stages>p{margin:0}
+.stage-section .step p{font-size:17px;color:#435a6c;line-height:1.9}.stage-section .step h2{font-size:23px}.stage-section .image-button img{max-height:365px}
+@media(max-width:1080px){.stage-index{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.stage-index{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stage-jump{padding:12px}.stage-jump-title{font-size:14px}.stage-heading{gap:11px;flex-wrap:wrap;padding:15px}.stage-number{flex-basis:45px;height:45px;font-size:18px}.stage-heading h2{font-size:20px}.stage-heading p{font-size:14px}.back-to-stages{margin-right:0}.stage-section{margin:28px 0 40px}}
+`;
+  for(const [i,p] of unifiedPages.entries()){
+    let html=renderPage(p,i);
+    if(p.id==="steps"){
+      const start=html.indexOf('<section class="hero">');
+      const end=html.indexOf('<div class="pager">',start);
+      if(start<0||end<0)throw new Error("Missing guide content slot");
+      html=html.slice(0,start)+fullJourney+html.slice(end);
+    }
+    if(p.id==="home"){
+      html=html.replace('<div class="notice">',`<section class="home-stages"><h2>مراحل أداء المقياس</h2><p>اضغط على المرحلة للانتقال إليها داخل صفحة الخطوات الموحّدة.</p>${stageCards("steps.html")}<a class="btn primary" href="steps.html">عرض الخطوات كاملة ←</a></section><div class="notice">`);
+      html=html.replace('يحتوي الدليل على 21 خطوة موزعة على 4 مراحل،','يحتوي الدليل على 21 خطوة موزعة على 4 مراحل في صفحة واحدة،');
+      html=html.replace('حلول المشكلات الشائعة والدعم الفني','٢١ خطوة مصوّرة من تسجيل الدخول حتى التسليم');
+    }
+    html=html.replace(/(login|setup|verify|exam)\.html#step-/g,'steps.html#step-');
+    html=html.replace('</style>',unifiedStyle+'\n</style>');
+    fs.writeFileSync(path.join(output,p.file),html,'utf8');
+  }
+  for(const [id] of journey){
+    const destination='steps.html#'+id;
+    const redirect=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url=${destination}"><title>الانتقال إلى خطوات المقياس</title><script>location.replace('steps.html'+(location.hash||'#${id}'));</script></head><body><a href="${destination}">الانتقال إلى خطوات المقياس</a></body></html>`;
+    fs.writeFileSync(path.join(output,id+'.html'),redirect,'utf8');
+  }
+  console.log("النسخة الموحدة جاهزة: ٢١ خطوة في steps.html مع تحويل روابط المراحل السابقة");
+})();
