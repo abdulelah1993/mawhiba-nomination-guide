@@ -800,3 +800,24 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
   }
   console.log("النسخة الموحدة جاهزة: ٢١ خطوة في steps.html مع تحويل روابط المراحل السابقة");
 })();
+
+
+// English canonical guide link: Mawhiba Remote Trial Assessment.
+// Keep previous URLs working for existing students.
+{
+  const canonical = "mawhiba-remote-trial-assessment.html";
+  const oldFile = "steps.html";
+  const guidePath = path.join(output, oldFile);
+  const canonicalPath = path.join(output, canonical);
+  if (!fs.existsSync(guidePath)) throw new Error("Unified steps page missing");
+  const original = fs.readFileSync(guidePath, "utf8");
+  fs.writeFileSync(canonicalPath, original.replaceAll(oldFile, canonical), "utf8");
+  for (const pageName of ["index.html", "before.html", "help.html", "login.html", "setup.html", "verify.html", "exam.html"]) {
+    const p = path.join(output, pageName);
+    if (!fs.existsSync(p)) continue;
+    fs.writeFileSync(p, fs.readFileSync(p, "utf8").replaceAll(oldFile, canonical), "utf8");
+  }
+  const fallback = '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=' + canonical + '"><title>الانتقال إلى دليل المقياس</title><script>location.replace("' + canonical + '" + location.hash);</script></head><body><a href="' + canonical + '">الانتقال إلى دليل مقياس موهبة التجريبي عن بعد</a></body></html>';
+  fs.writeFileSync(guidePath, fallback, "utf8");
+  console.log("English canonical guide: /" + canonical);
+}
