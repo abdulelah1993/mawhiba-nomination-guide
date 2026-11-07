@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: mawhiba-olympiad-guide
+    name: mawhiba-remote-trial-assessment
     runtime: static
     buildCommand: node build.js
     staticPublishPath: ./dist
