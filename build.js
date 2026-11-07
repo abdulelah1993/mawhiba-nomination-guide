@@ -821,3 +821,34 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
   fs.writeFileSync(guidePath, fallback, "utf8");
   console.log("English canonical guide: /" + canonical);
 }
+
+
+// Mawhiba domain migration: redirect old host ONLY after new site has working assets.
+// This preserves the historical Render URLs during provisioning of the new site.
+{
+  const newHost = "https://mawhiba-remote-trial-assessment.onrender.com";
+  const stepPage = "mawhiba-remote-trial-assessment.html";
+  const legacyScript = '<script>(function(){'
+    + 'var host=' + JSON.stringify(newHost) + ';'
+    + 'var pathname=location.pathname;'
+    + 'var page=pathname.split("/").pop()||"index.html";'
+    + 'var stage={login:"login",setup:"setup",verify:"verify",exam:"exam"};'
+    + 'var stageName=page.replace(/\.html$/,"");'
+    + 'var target=(page==="steps.html"||page==="mawhiba-remote-trial-assessment.html"||stage[stageName])?"/mawhiba-remote-trial-assessment.html":'
+    + '(page==="before.html"||page==="help.html"?"/"+page:"/");'
+    + 'var fragment=location.hash||(stage[stageName]?"#"+stage[stageName]:"");'
+    + 'var p=new Image();'
+    + 'p.onload=function(){location.replace(host+target+location.search+fragment);};'
+    + 'p.onerror=function(){};'
+    + 'p.src=host+"/assets/page-01-image-01.png?verify="+Date.now();'
+    + '})();</script>';
+  const oldPages=["index.html","before.html","help.html","steps.html","mawhiba-remote-trial-assessment.html","login.html","setup.html","verify.html","exam.html"];
+  for(const name of oldPages){
+    const filename=path.join(output,name);
+    if(!fs.existsSync(filename))continue;
+    const content=fs.readFileSync(filename,"utf8");
+    if(!content.includes("</head>"))throw new Error("Head tag missing: "+name);
+    fs.writeFileSync(filename,content.replace("</head>",legacyScript+"</head>"),"utf8");
+  }
+  console.log("Old Render links are migration-ready; users stay on legacy site until new host is live.");
+}
