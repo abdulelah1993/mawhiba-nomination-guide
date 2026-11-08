@@ -185,9 +185,13 @@ header {
   font-weight: bold;
 }
 .brand img {
-  max-width: 92px;
-  max-height: 55px;
+  width: 176px;
+  height: 62px;
+  max-width: 176px;
+  max-height: 62px;
   object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
 .brand small {
   display: block;
@@ -262,8 +266,25 @@ h1 {
 }
 h2 { color: var(--navy); font-size: 21px; }
 p { color: var(--muted); }
-.brand-partners { display:flex; gap:18px; justify-content:center; align-items:center; flex-wrap:wrap; background:white; border:1px solid var(--border); border-radius:18px; margin-bottom:24px; padding:16px; }
-.brand-partners img { width:auto; height:57px; max-width:31%; object-fit:contain; }
+.brand-partners {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(24px,4vw,58px);
+  align-items:center;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  margin-bottom:24px;
+  padding:23px clamp(18px,4vw,50px);
+}
+.brand-partners img {
+  width:100%;
+  max-width:100%;
+  height:78px;
+  object-fit:contain;
+  display:block;
+  justify-self:center;
+}
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -490,7 +511,9 @@ footer {
 @media (max-width: 650px) {
   .layout { padding: 15px; }
   .header-inner { padding: 10px; }
-  .brand img { width: 55px; }
+  .brand img { width: 112px; max-width:31vw; height:50px; }
+  .brand-partners { grid-template-columns:1fr; gap:19px; padding:20px; }
+  .brand-partners img { height:68px; width:min(100%, 290px); }
   .brand span { font-size: 12px; }
   .search input { width: 125px; }
   .hero { padding: 22px; }
@@ -635,7 +658,7 @@ function pageContent(id) {
       "خطوات واضحة بصورها من تسجيل الدخول حتى التسليم النهائي."
     )}
     <div class="brand-partners" aria-label="شعارات الجهات">
-      <img src="assets/page-01-image-01.png" alt="شعار موهبة">
+      <img src="assets/program-logo.webp" alt="شعار البرنامج الوطني للكشف عن الموهوبين">
       <img src="assets/ministry-logo.webp" alt="شعار وزارة التعليم">
       <img src="assets/etec-logo.webp" alt="شعار هيئة تقويم التعليم والتدريب">
     </div>
@@ -805,7 +828,7 @@ function renderPage(page, index) {
 <header>
   <div class="header-inner">
     <a href="index.html" class="brand">
-      <img src="assets/page-01-image-01.png" alt="شعار موهبة">
+      <img src="assets/program-logo.webp" alt="شعار البرنامج الوطني للكشف عن الموهوبين">
       <span>دليل مقياس موهبة التجريبي
         <small>الخطوات الإرشادية للطالب</small>
       </span>
