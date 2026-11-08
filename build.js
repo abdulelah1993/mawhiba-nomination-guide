@@ -502,6 +502,32 @@ footer {
 @media(max-width:920px){.support-wizard-grid{grid-template-columns:1fr}.support-preview{position:static}}
 @media(max-width:650px){.support-wizard-heading{gap:9px}.support-heading-icon{width:42px;height:42px;flex-basis:42px}.support-wizard{padding:16px}.support-preview{padding:14px}#support-message{padding:12px;font-size:14px}}
 
+
+/* Saudi-time trial & actual assessment countdowns in the guide sidebar */
+aside { max-height:calc(100dvh - 118px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin }
+.countdown-panel{border-top:1px solid var(--border);margin-top:19px;padding-top:16px;display:grid;gap:13px}
+.countdown-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.countdown-panel-head h2{margin:0;font-size:16px;color:var(--navy);line-height:1.4}
+.countdown-panel-head small{color:var(--muted);font-size:11px;white-space:nowrap}
+.countdown-card{padding:14px 11px;border:1px solid #dce7f4;border-radius:14px;background:#f8faff;min-width:0}
+.countdown-card-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;margin-bottom:8px}
+.countdown-tag{font-size:11px;color:#205bc3;background:#e4ecff;padding:3px 8px;border-radius:999px;font-weight:800}
+.countdown-tag--actual{color:#7150c7;background:#efeaff}
+.countdown-status{font-size:11px;color:#566d83;font-weight:800}
+.countdown-card h3{font-size:13px;margin:0 0 4px;color:var(--navy);line-height:1.55}
+.countdown-card p{font-size:12px;line-height:1.6;color:#566d83;margin:0}
+.countdown-card p.countdown-window{font-weight:700;color:#305a83;margin-top:2px}
+.countdown-units{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:12px}
+.countdown-units>div{padding:9px 2px 6px;background:#fff;border:1px solid #e3ebf5;border-radius:10px;min-width:0;text-align:center}
+.countdown-units strong{font-size:17px;font-weight:900;color:var(--navy);line-height:1.1;display:block;font-variant-numeric:tabular-nums;direction:ltr}
+.countdown-units span{display:block;font-size:10px;color:#73849a;margin-top:5px}
+.countdown-card.is-live{border-color:#94d3b9;background:#f3fcf7}
+.countdown-card.is-live .countdown-status{color:#0b8658}
+.countdown-card.is-ended{background:#f7f8fa}
+.countdown-card.is-ended .countdown-status{color:#786047}
+@media(max-width:980px){aside{max-height:none;overflow:visible}aside nav{max-width:100%;min-width:0;overflow-x:auto}}
+@media(max-width:650px){.countdown-units{gap:8px}.countdown-units>div{padding:10px 4px}.countdown-panel{margin-top:14px}}
+
 @media (max-width: 980px) {
   .layout { grid-template-columns: 1fr; }
   aside { position: static; overflow-x: auto; }
@@ -782,6 +808,41 @@ document.getElementById("close-image").onclick = () => dialog.close();
   refresh();
 })();
 
+
+/* Countdown to the start; while running, countdown to the end. Time is fixed to Saudi UTC+03. */
+(function initTrialCountdowns(){
+  const cards = [...document.querySelectorAll("[data-countdown]")];
+  if(!cards.length) return;
+  const pad = n => String(n).padStart(2,"0");
+  function tick(){
+    const now = Date.now();
+    cards.forEach(card=>{
+      const start = Date.parse(card.dataset.start);
+      const end = Date.parse(card.dataset.end);
+      const live = now >= start && now < end;
+      const ended = now >= end;
+      const remaining = ended ? 0 : Math.max(0,(live?end:start)-now);
+      const total = Math.floor(remaining/1000);
+      const units = {
+        days:Math.floor(total/86400),
+        hours:Math.floor(total%86400/3600),
+        minutes:Math.floor(total%3600/60),
+        seconds:total%60
+      };
+      Object.entries(units).forEach(([name,value])=>{
+        const target=card.querySelector('[data-unit="'+name+'"]');
+        if(target) target.textContent=pad(value);
+      });
+      const status=card.querySelector(".countdown-status");
+      if(status) status.textContent=ended?"انتهى الموعد":live?"المقياس قائم الآن":"متبقي على البداية";
+      card.classList.toggle("is-live",live);
+      card.classList.toggle("is-ended",ended);
+    });
+  }
+  tick();
+  window.setInterval(tick,1000);
+})();
+
 const search = document.getElementById("search");
 const results = document.getElementById("results");
 search.addEventListener("input", () => {
@@ -857,6 +918,39 @@ function renderPage(page, index) {
       <div>تقدمك: <strong id="progress-count">0/21</strong></div>
       <div class="progress"><span id="progress-bar"></span></div>
     </div>
+
+    <section class="countdown-panel" aria-label="مواعيد مقياس موهبة التجريبي عن بُعد">
+      <div class="countdown-panel-head">
+        <h2>مواعيد المقياس</h2>
+        <small>بتوقيت السعودية</small>
+      </div>
+      <article class="countdown-card" data-countdown="trial"
+        data-start="2026-11-09T19:30:00+03:00" data-end="2026-11-09T20:30:00+03:00">
+        <div class="countdown-card-head"><span class="countdown-tag">الاختبار التجريبي</span><span class="countdown-status" role="status">جارٍ الحساب</span></div>
+        <h3>مقياس موهبة التجريبي</h3>
+        <p>الاثنين 9 نوفمبر 2026</p>
+        <p class="countdown-window">7:30 – 8:30 مساءً</p>
+        <div class="countdown-units" aria-label="الوقت المتبقي">
+          <div><strong data-unit="days">00</strong><span>يوم</span></div>
+          <div><strong data-unit="hours">00</strong><span>ساعة</span></div>
+          <div><strong data-unit="minutes">00</strong><span>دقيقة</span></div>
+          <div><strong data-unit="seconds">00</strong><span>ثانية</span></div>
+        </div>
+      </article>
+      <article class="countdown-card" data-countdown="actual"
+        data-start="2026-11-11T19:30:00+03:00" data-end="2026-11-11T23:30:00+03:00">
+        <div class="countdown-card-head"><span class="countdown-tag countdown-tag--actual">الاختبار الفعلي</span><span class="countdown-status" role="status">جارٍ الحساب</span></div>
+        <h3>مقياس موهبة التجريبي</h3>
+        <p>الأربعاء 11 نوفمبر 2026</p>
+        <p class="countdown-window">7:30 – 11:30 مساءً</p>
+        <div class="countdown-units" aria-label="الوقت المتبقي">
+          <div><strong data-unit="days">00</strong><span>يوم</span></div>
+          <div><strong data-unit="hours">00</strong><span>ساعة</span></div>
+          <div><strong data-unit="minutes">00</strong><span>دقيقة</span></div>
+          <div><strong data-unit="seconds">00</strong><span>ثانية</span></div>
+        </div>
+      </article>
+    </section>
   </aside>
 
   <main>
