@@ -447,6 +447,40 @@ footer {
   color: var(--muted);
   margin: 40px 0 10px;
 }
+
+/* Live support-message composer */
+.support-wizard{margin:28px 0 16px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow);padding:clamp(17px,3vw,29px)}
+.support-wizard-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:23px}
+.support-wizard-heading h2{font-size:clamp(21px,2.4vw,27px);line-height:1.5;margin:5px 0 7px}
+.support-wizard-heading p{margin:0;color:#53687c;font-size:15px;line-height:1.8;max-width:750px}
+.support-eyebrow{font-size:13px;font-weight:800;color:var(--purple)}
+.support-heading-icon{width:51px;height:51px;flex:0 0 51px;display:grid;place-items:center;background:#ecf0ff;color:var(--navy);border-radius:15px;font-size:25px}
+.support-wizard-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:19px;align-items:start}
+.support-fields,.support-preview{min-width:0}
+.support-fields{display:grid;gap:15px}
+.support-field{display:grid;gap:7px;color:var(--navy);font-size:15px;font-weight:800}
+.support-field input,.support-field select,.support-field textarea{width:100%;min-width:0;box-sizing:border-box;border:1px solid #cbd8e8;background:#fff;color:#18354b;border-radius:11px;font:inherit;font-weight:500;font-size:16px;line-height:1.7;padding:11px 13px;outline-offset:2px;transition:border-color .18s,box-shadow .18s}
+.support-field input:focus,.support-field select:focus,.support-field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(32,91,195,.11);outline:none}
+.support-field input::placeholder,.support-field textarea::placeholder{color:#7d8c9d;font-weight:400}
+.support-field select{cursor:pointer}
+.support-field textarea{resize:vertical;min-height:113px}
+.support-privacy-note{font-size:12px;color:#687c8d;margin:0;line-height:1.7}
+.support-preview{background:#f5f8ff;border:1px solid #dbe5f5;border-radius:17px;padding:20px;position:sticky;top:95px}
+.support-preview-heading{display:flex;align-items:center;gap:9px;color:var(--navy);margin-bottom:12px;font-weight:800}
+.support-preview-heading h3{font-size:18px;margin:0}
+.support-preview-heading span{font-size:23px;color:var(--blue)}
+#support-message{font-family:inherit;white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:2;color:#213c52;background:#fff;border:1px solid #dce5f1;border-radius:12px;padding:16px;margin:0 0 15px;min-height:270px;user-select:text}
+.support-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.support-copy-btn{min-width:140px}
+#support-copy-status{color:#176e61;font-size:13px;font-weight:700}
+.support-email{border-top:1px solid #dce5f1;margin-top:18px;padding-top:12px;font-size:13px;color:#53687c;overflow-wrap:anywhere}
+.support-email a{display:inline-block;font-weight:800;color:var(--blue);direction:ltr}
+.support-attach-reminder{margin-top:18px;background:#fff9e9;border:1px solid #f1d48c;border-radius:13px;padding:16px 18px;display:grid;gap:3px;line-height:1.8;color:#704d18}
+.support-attach-reminder strong{font-size:15px}
+.support-attach-reminder span{font-size:13px}
+@media(max-width:920px){.support-wizard-grid{grid-template-columns:1fr}.support-preview{position:static}}
+@media(max-width:650px){.support-wizard-heading{gap:9px}.support-heading-icon{width:42px;height:42px;flex-basis:42px}.support-wizard{padding:16px}.support-preview{padding:14px}#support-message{padding:12px;font-size:14px}}
+
 @media (max-width: 980px) {
   .layout { grid-template-columns: 1fr; }
   aside { position: static; overflow-x: auto; }
@@ -542,11 +576,56 @@ function pageContent(id) {
           <summary>${x[0]}</summary>
           <p>${x[1]}</p>
         </details>`).join("")}
-      <div class="notice">
-        <strong>الدعم الفني</strong>
-        <p>اذكر اسم الاختبار والتخصص ووصف المشكلة، وأرفق صورة إن أمكن.</p>
-        <a href="mailto:gig@mawhiba.org.sa">gig@mawhiba.org.sa</a>
-      </div>`;
+      <section class="support-wizard" id="support-request" aria-labelledby="support-request-title">
+        <div class="support-wizard-heading">
+          <div><span class="support-eyebrow">نموذج الدعم الفني</span>
+            <h2 id="support-request-title">نموذج استقبال مشكلات مقياس موهبة التجريبي – عن بُعد</h2>
+            <p>عبّئ البيانات واختر نوع الصعوبة. سيتم تجهيز الرسالة تلقائيًا لتتمكن من نسخها وإرسالها إلى الدعم الفني.</p>
+          </div>
+          <span class="support-heading-icon" aria-hidden="true">✉</span>
+        </div>
+        <div class="support-wizard-grid">
+          <div class="support-fields" role="group" aria-label="بيانات المشكلة">
+            <label class="support-field"><span>اسم الطالب/ـة</span>
+              <input type="text" id="support-student-name" maxlength="120" autocomplete="off" placeholder="اكتب اسم الطالب أو الطالبة">
+            </label>
+            <label class="support-field"><span>رقم الهوية</span>
+              <input type="text" inputmode="numeric" id="support-id-number" maxlength="10" autocomplete="off" placeholder="أدخل رقم الهوية">
+            </label>
+            <label class="support-field"><span>نوع الصعوبة</span>
+              <select id="support-problem-type">
+                <option value="">اختر نوع الصعوبة من القائمة</option>
+                <option>تعذر تسجيل الدخول إلى منصة كلاسيرا.</option>
+                <option>اسم المستخدم أو كلمة المرور غير صحيحة.</option>
+                <option>المقياس لا يظهر في حساب الطالب.</option>
+                <option>مشكلة في أذونات الكاميرا أو الميكروفون.</option>
+                <option>تعذر التحقق من هوية الطالب أو تهيئة الجهاز.</option>
+                <option>تعذر بدء المقياس أو توقفه أثناء الأداء.</option>
+                <option>أخرى.</option>
+              </select>
+            </label>
+            <label class="support-field"><span>وصف الصعوبة</span>
+              <textarea id="support-description" rows="5" maxlength="1400" placeholder="اشرح المشكلة ومتى ظهرت، وأي رسالة خطأ ظهرت لك"></textarea>
+            </label>
+            <p class="support-privacy-note">البيانات تُستخدم لتجهيز النص داخل المتصفح فقط، ولا يتم حفظها أو إرسالها آليًا من هذه الصفحة.</p>
+          </div>
+          <div class="support-preview" aria-label="معاينة الرسالة">
+            <div class="support-preview-heading"><span aria-hidden="true">▤</span><h3>النص الجاهز للإرسال</h3></div>
+            <pre dir="rtl" id="support-message" tabindex="0"></pre>
+            <div class="support-actions">
+              <button type="button" class="btn primary support-copy-btn" id="support-copy">نسخ النص</button>
+              <span role="status" aria-live="polite" id="support-copy-status"></span>
+            </div>
+            <div class="support-email">إرساله إلى البريد الفني:
+              <a href="mailto:gig@mawhiba.org.sa">gig@mawhiba.org.sa</a>
+            </div>
+          </div>
+        </div>
+        <div class="support-attach-reminder" role="note">
+          <strong>مهم: ضرورة إرفاق صورة واضحة توضح الإشكالية عند إرسال الرسالة.</strong>
+          <span>بعد نسخ النص، أرفق لقطة الشاشة أو صورة الخطأ مع طلب الدعم.</span>
+        </div>
+      </section>`;
   }
 
   return `
@@ -630,6 +709,55 @@ document.querySelectorAll("[data-image]").forEach(button => {
   });
 });
 document.getElementById("close-image").onclick = () => dialog.close();
+
+
+// Build an email-ready message locally; do not transmit or save student data.
+(function initSupportRequest(){
+  const output = document.getElementById("support-message");
+  if(!output) return;
+  const fields = ["support-student-name","support-id-number","support-problem-type","support-description"];
+  const el = id => document.getElementById(id);
+  const read = id => el(id).value.trim() || "—";
+  const status = el("support-copy-status");
+  function refresh(){
+    output.textContent = [
+      "نموذج استقبال مشكلات مقياس موهبة التجريبي – عن بُعد",
+      "",
+      "اسم الطالب/ـة: " + read(fields[0]),
+      "رقم الهوية: " + read(fields[1]),
+      "نوع الصعوبة: " + read(fields[2]),
+      "وصف الصعوبة: " + read(fields[3]),
+      "",
+      "ملاحظة: يرجى إرفاق صورة واضحة توضح الإشكالية."
+    ].join("\\n");
+    status.textContent = "";
+  }
+  fields.forEach(id => {
+    el(id).addEventListener("input",refresh);
+    el(id).addEventListener("change",refresh);
+  });
+  el("support-copy").addEventListener("click", async () => {
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(output.textContent);
+      } else {
+        const temp = document.createElement("textarea");
+        temp.value = output.textContent;
+        temp.style.position = "fixed";
+        temp.style.opacity = "0";
+        document.body.appendChild(temp);
+        temp.select();
+        const copied = document.execCommand("copy");
+        temp.remove();
+        if(!copied) throw new Error("Copy unavailable");
+      }
+      status.textContent = "تم نسخ الرسالة. أرفق صورة الإشكالية عند الإرسال.";
+    }catch(e){
+      status.textContent = "تعذر النسخ التلقائي؛ حدّد النص الموجود بالأعلى وانسخه يدويًا.";
+    }
+  });
+  refresh();
+})();
 
 const search = document.getElementById("search");
 const results = document.getElementById("results");
