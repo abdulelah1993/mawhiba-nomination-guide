@@ -566,6 +566,7 @@ function renderStep(step) {
         <span class="number">الخطوة ${n} من 21</span>
         <h2>${title}</h2>
         <p>${description}</p>
+        ${n === 1 ? '<a class="btn primary" href="https://mawhiba.classera.com/" target="_blank" rel="noopener noreferrer" style="margin-top:10px;display:inline-flex;align-items:center;gap:8px">فتح منصة مقياس موهبة ↗</a>' : ""}
       </div>
       <button class="image-button" data-image="${image}"
         data-caption="الخطوة ${n}: ${title}"
