@@ -1101,7 +1101,7 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
 
 ;(function addIntroductoryMeeting() {
   // Paste a shared Google Drive video link in this single setting when available.
-  const INTRO_VIDEO_DRIVE_URL = "";
+  const INTRO_VIDEO_DRIVE_URL = "https://drive.google.com/file/d/1y6ClOvbhChatR57BwfY95gOVhzIfuQLM/view?usp=sharing";
   const introFilename = "intro.html";
   const homeFilename = "index.html";
   const helpFilename = "help.html";
@@ -1145,6 +1145,7 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
       <p>راجع متطلبات الجهاز ثم تابع الخطوات المصوّرة من تسجيل الدخول حتى التسليم النهائي.</p>
       <div class="intro-next-links">
         <a class="btn" href="before.html">متطلبات ما قبل الاختبار</a>
+        <a class="btn intro-platform-btn" href="https://mawhiba.classera.com/" target="_blank" rel="noopener noreferrer">الدخول إلى منصة المقياس ↗</a>
         <a class="btn primary" href="mawhiba-remote-trial-assessment.html">خطوات الدخول وأداء المقياس ←</a>
       </div>
     </section>
@@ -1159,6 +1160,7 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
           <span class="icon" aria-hidden="true">▶</span>
           <span>اللقاء التعريفي</span>
         </a>
+        <a class="nav-link intro-platform-nav" href="https://mawhiba.classera.com/" target="_blank" rel="noopener noreferrer"><span class="icon" aria-hidden="true">↗</span><span>الدخول إلى المقياس</span></a>
 `;
   const introStyles = `
 /* Introductory meeting video section */
@@ -1182,6 +1184,8 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
 .intro-next-section p{margin:0 0 14px}
 .intro-next-links{display:flex;flex-wrap:wrap;gap:10px}
 .intro-home-card{border-color:#d5d7f4;background:linear-gradient(125deg,#fff,#f5f3ff)}
+.intro-platform-nav{color:var(--blue);font-weight:800}
+.intro-platform-btn{border-color:#aec6e7;background:#f0f6ff;color:var(--blue)}
 @media(max-width:650px){.intro-section-head{flex-direction:column}.intro-section{padding:15px}.intro-waiting{gap:6px;padding:12px}.intro-play-symbol{width:48px;height:48px}.intro-waiting p{font-size:12px}.intro-next-section{padding:17px}}
 `;
   const read = name => {
