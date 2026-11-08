@@ -830,6 +830,7 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
   const stepPage = "mawhiba-remote-trial-assessment.html";
   const legacyScript = '<script>(function(){'
     + 'var host=' + JSON.stringify(newHost) + ';'
+    + 'if(location.origin===host)return;'
     + 'var pathname=location.pathname;'
     + 'var page=pathname.split("/").pop()||"index.html";'
     + 'var stage={login:"login",setup:"setup",verify:"verify",exam:"exam"};'
