@@ -1066,3 +1066,128 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
   fs.writeFileSync(guidePath, fallback, "utf8");
   console.log("English canonical guide: /" + canonical);
 }
+
+;(function addIntroductoryMeeting() {
+  // Paste a shared Google Drive video link in this single setting when available.
+  const INTRO_VIDEO_DRIVE_URL = "";
+  const introFilename = "intro.html";
+  const homeFilename = "index.html";
+  const helpFilename = "help.html";
+  const targets = [homeFilename, "before.html", "mawhiba-remote-trial-assessment.html", helpFilename];
+  let driveId = "";
+  if (INTRO_VIDEO_DRIVE_URL.trim()) {
+    const u = new URL(INTRO_VIDEO_DRIVE_URL.trim());
+    if (!["drive.google.com", "docs.google.com"].includes(u.hostname)) throw Error("Expected a Google Drive video URL");
+    const pathMatch = u.pathname.match(/\/file\/d\/([A-Za-z0-9_-]{10,})(?:\/|$)/);
+    const rawId = pathMatch ? pathMatch[1] : u.searchParams.get("id");
+    if (!rawId || !/^[A-Za-z0-9_-]{10,}$/.test(rawId)) throw Error("Invalid Google Drive file ID");
+    driveId = rawId;
+  }
+  const player = driveId
+    ? `<iframe src="https://drive.google.com/file/d/${driveId}/preview" title="تسجيل اللقاء التعريفي لمقياس موهبة التجريبي" allow="autoplay; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>`
+    : `<div class="intro-waiting" role="status"><span class="intro-play-symbol" aria-hidden="true">▶</span><h2>سيُتاح تسجيل اللقاء التعريفي هنا</h2><p>هذه الصفحة مخصصة لمشاهدة التسجيل، وسيظهر الفيديو عند ربطه.</p></div>`;
+  const videoLink = driveId
+    ? `<a class="btn intro-watch-btn" href="https://drive.google.com/file/d/${driveId}/view" target="_blank" rel="noopener noreferrer">فتح الفيديو على Google Drive ↗</a>`
+    : `<span class="intro-video-note">لم يُربط فيديو اللقاء بعد.</span>`;
+  const introMain = `<main>
+    <section class="hero">
+      <span class="eyebrow">تسجيل اللقاء التعريفي</span>
+      <h1>اللقاء التعريفي لمقياس موهبة التجريبي – عن بُعد</h1>
+      <p>شاهد تسجيل اللقاء للتعرّف على الاستعداد للمقياس وخطوات الدخول، وتهيئة الجهاز، وأداء الاختبار.</p>
+    </section>
+    <section class="intro-section" id="intro-video" aria-labelledby="intro-heading">
+      <div class="intro-section-head">
+        <div><span class="intro-kicker">المشاهدة داخل الدليل</span>
+          <h2 id="intro-heading">فيديو اللقاء التعريفي</h2>
+          <p>مشاهدة مباشرة من Google Drive دون الحاجة إلى مغادرة دليل موهبة.</p>
+        </div>
+        <span class="intro-source-tag">Google Drive</span>
+      </div>
+      <div class="intro-frame">${player}</div>
+      <div class="intro-video-footer">${videoLink}
+        <span>إذا لم يظهر الفيديو داخل الصفحة بعد ربطه، افتحه من Google Drive.</span>
+      </div>
+    </section>
+    <section class="intro-next-section" aria-label="بعد مشاهدة الفيديو">
+      <h2>بعد مشاهدة اللقاء</h2>
+      <p>راجع متطلبات الجهاز ثم تابع الخطوات المصوّرة من تسجيل الدخول حتى التسليم النهائي.</p>
+      <div class="intro-next-links">
+        <a class="btn" href="before.html">متطلبات ما قبل الاختبار</a>
+        <a class="btn primary" href="mawhiba-remote-trial-assessment.html">خطوات الدخول وأداء المقياس ←</a>
+      </div>
+    </section>
+    <div class="pager">
+      <a class="btn" href="index.html">العودة للرئيسية</a>
+      <a class="btn primary" href="mawhiba-remote-trial-assessment.html">متابعة الخطوات المصوّرة ←</a>
+    </div>
+    <footer>الدليل الإرشادي لمقياس موهبة التجريبي</footer>
+  </main>`;
+  const navEntry = `
+        <a class="nav-link " href="${introFilename}">
+          <span class="icon" aria-hidden="true">▶</span>
+          <span>اللقاء التعريفي</span>
+        </a>
+`;
+  const introStyles = `
+/* Introductory meeting video section */
+.intro-section{margin:22px 0;background:#fff;border:1px solid #dfe7f2;border-radius:20px;box-shadow:var(--shadow);padding:clamp(18px,3vw,28px)}
+.intro-section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:20px}
+.intro-section-head h2{font-size:clamp(21px,2.7vw,26px);margin:5px 0 3px;line-height:1.5}
+.intro-section-head p{font-size:14px;color:#587083;margin:0}
+.intro-kicker{color:#7759ce;font-weight:800;font-size:13px}
+.intro-source-tag{white-space:nowrap;border-radius:22px;padding:7px 12px;color:#2453a3;background:#edf3ff;font-weight:800;font-size:12px}
+.intro-frame{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#172d5a,#342d77);border-radius:17px;overflow:hidden;position:relative}
+.intro-frame iframe{display:block;width:100%;height:100%;border:0;background:#101c33}
+.intro-waiting{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:22px;color:#fff}
+.intro-play-symbol{display:grid;place-items:center;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);height:65px;width:65px;border-radius:50%;font-size:25px;padding-right:3px}
+.intro-waiting h2{color:#fff;font-size:clamp(19px,3vw,27px);margin:5px 0}
+.intro-waiting p{color:#dfe5f7;font-size:15px;max-width:430px;margin:0}
+.intro-video-footer{display:flex;justify-content:space-between;align-items:center;gap:13px;flex-wrap:wrap;margin-top:16px;color:#536d83;font-size:13px}
+.intro-video-note{font-weight:800;color:#695eb0;background:#f3f0ff;padding:7px 12px;border-radius:10px}
+.intro-watch-btn{color:#205bc3;border-color:#c9d6ef}
+.intro-next-section{border:1px solid #e1e8f1;border-radius:17px;background:#fff;padding:21px 24px;margin-top:20px}
+.intro-next-section h2{margin:0 0 4px}
+.intro-next-section p{margin:0 0 14px}
+.intro-next-links{display:flex;flex-wrap:wrap;gap:10px}
+.intro-home-card{border-color:#d5d7f4;background:linear-gradient(125deg,#fff,#f5f3ff)}
+@media(max-width:650px){.intro-section-head{flex-direction:column}.intro-section{padding:15px}.intro-waiting{gap:6px;padding:12px}.intro-play-symbol{width:48px;height:48px}.intro-waiting p{font-size:12px}.intro-next-section{padding:17px}}
+`;
+  const read = name => {
+    const p = path.join(output, name);
+    if (!fs.existsSync(p)) throw Error("Missing generated page: " + name);
+    return fs.readFileSync(p, "utf8");
+  };
+  function decorate(html, isHome) {
+    const sidebarNavEnd = "    </nav>";
+    if (!html.includes(sidebarNavEnd)) throw Error("Sidebar nav insertion point missing");
+    html = html.replace(sidebarNavEnd, navEntry + sidebarNavEnd);
+    if (!html.includes("</style>")) throw Error("CSS closing tag missing");
+    html = html.replace("</style>", introStyles + "\n</style>");
+    if (isHome) {
+      const target = '<a class="card" href="help.html">';
+      if (!html.includes(target)) throw Error("Home cards insertion point missing");
+      const feature = `<a class="card intro-home-card" href="${introFilename}">
+        <span class="symbol" aria-hidden="true">▶</span>
+        <h2>اللقاء التعريفي</h2>
+        <p>تسجيل اللقاء التعريفي لمقياس موهبة التجريبي – عن بُعد، للمشاهدة داخل الموقع.</p>
+        <span class="range">${driveId ? "مشاهدة التسجيل" : "سيُتاح التسجيل قريبًا"}</span>
+      </a>`;
+      html = html.replace(target, feature + "\n        " + target);
+    }
+    return html;
+  }
+  for (const name of targets) {
+    const updated = decorate(read(name), name === homeFilename);
+    fs.writeFileSync(path.join(output, name), updated, "utf8");
+  }
+  let intro = read(helpFilename);
+  intro = intro
+    .replace(/<title>[^<]*<\/title>/, "<title>اللقاء التعريفي | دليل مقياس موهبة التجريبي</title>")
+    .replace(/<main>[\s\S]*?<\/main>/, introMain)
+    .replace(/<a class="nav-link active"[\s\S]*?<\/a>/, match =>
+      match.replace('class="nav-link active"', 'class="nav-link "').replace('aria-current="page"', ""))
+    .replace(`<a class="nav-link " href="${introFilename}">`, `<a class="nav-link active" href="${introFilename}" aria-current="page">`);
+  if (!intro.includes('id="intro-video"') || !intro.includes('aria-current="page"')) throw Error("Failed generating intro page");
+  fs.writeFileSync(path.join(output, introFilename), intro, "utf8");
+  console.log("Introductory meeting section generated: /intro.html", driveId ? "(video configured)" : "(awaiting Drive video link)");
+})();
