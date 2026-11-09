@@ -1317,7 +1317,7 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
   const target=path.join(output,filename);
   if(!fs.existsSync(target)) throw new Error("Expected manual tab not generated");
   const original=fs.readFileSync(target,"utf8");
-  const pdfName="mawhiba-trial-guide.pdf";
+  const pdfName="الدليل الارشادي لمقياس موهبة التجريبي.pdf";
   const pdfAssetPath="assets/"+pdfName;
   const hasPublishedPdf=fs.existsSync(path.join(__dirname,"assets",pdfName));
   const title="الدليل الارشادي لمقياس موهبة التجريبي";
