@@ -1311,3 +1311,172 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
  fs.writeFileSync(path.join(output,filename),doc,"utf8");
  console.log("New manual tab: "+filename);
 })();
+
+;(function installOriginalPdfReader() {
+  const filename="manual.html";
+  const target=path.join(output,filename);
+  if(!fs.existsSync(target)) throw new Error("Expected manual tab not generated");
+  const original=fs.readFileSync(target,"utf8");
+  const pdfName="mawhiba-trial-guide.pdf";
+  const pdfAssetPath="assets/"+pdfName;
+  const hasPublishedPdf=fs.existsSync(path.join(__dirname,"assets",pdfName));
+  const title="الدليل الارشادي لمقياس موهبة التجريبي";
+  const main=`<main class="pdf-page-main">
+    <section class="hero">
+      <span class="eyebrow">الدليل الأصلي</span>
+      <h1>${title}</h1>
+      <p>استعرض صفحات الملف الأصلي كما هي، وانتقل بين الصفحات، وكبّر العرض، ثم نزّل ملف PDF عند الحاجة.</p>
+    </section>
+    <section class="pdf-reader-card" aria-label="استعراض الدليل الأصلي">
+      <div class="pdf-reader-toolbar">
+        <div class="pdf-reader-meta"><strong>${title}</strong><span>ملف PDF • ٢٧ صفحة</span></div>
+        <div class="pdf-reader-actions">
+          <a class="btn pdf-download" id="manual-pdf-download" href="#" download="${pdfName}" hidden>تنزيل PDF <span aria-hidden="true">↓</span></a>
+          <a class="btn pdf-open" id="manual-pdf-open" href="#" target="_blank" rel="noopener noreferrer" hidden>فتح الملف ↗</a>
+        </div>
+      </div>
+      <div id="pdf-reader-loading" class="pdf-reader-loading" role="status">جارٍ تجهيز عارض الملف…</div>
+      <div class="pdf-reader-controls" id="pdf-reader-controls" hidden>
+        <div class="pdf-page-controls">
+          <button type="button" class="btn" id="pdf-prev" aria-label="الصفحة السابقة">السابق</button>
+          <label class="pdf-page-counter">صفحة <input id="pdf-current-page" type="number" min="1" value="1" inputmode="numeric" aria-label="رقم الصفحة"> من <span id="pdf-total-pages">٢٧</span></label>
+          <button type="button" class="btn" id="pdf-next" aria-label="الصفحة التالية">التالي</button>
+        </div>
+        <div class="pdf-zoom-controls">
+          <button type="button" class="btn" id="pdf-zoom-out" aria-label="تصغير">−</button>
+          <span id="pdf-zoom-value" aria-live="polite">100%</span>
+          <button type="button" class="btn" id="pdf-zoom-in" aria-label="تكبير">+</button>
+        </div>
+      </div>
+      <div class="pdf-reader-stage" id="pdf-reader-stage">
+        <div class="pdf-reader-placeholder" id="pdf-reader-placeholder" ${hasPublishedPdf?"hidden":""}>
+          <span class="pdf-placeholder-icon" aria-hidden="true">▤</span>
+          <h2>استعراض ملف PDF الأصلي</h2>
+          <p>ملف الدليل لم يُنشر بعد ضمن ملفات الموقع. تقدر تختاره من جهازك لتصفحه هنا مباشرة دون رفعه أو إرسال بياناته.</p>
+          <label class="btn primary pdf-file-picker">اختيار الملف من الجهاز <input type="file" id="manual-local-pdf" accept=".pdf,application/pdf" hidden></label>
+          <p class="pdf-privacy-note">المعاينة محلية داخل متصفحك؛ ولا يتم رفع الملف للموقع.</p>
+        </div>
+        <canvas id="pdf-reader-canvas" aria-label="صفحة من الدليل" hidden></canvas>
+        <iframe id="pdf-reader-fallback" title="استعراض الدليل PDF" hidden></iframe>
+      </div>
+      <div class="pdf-reader-footnote">
+        <span>يُعرض ملف PDF دون إعادة صياغة أو تعديل الصفحات.</span>
+        <span id="pdf-reader-error" role="alert"></span>
+      </div>
+    </section>
+    <div class="pager"><a class="btn" href="index.html">الرئيسية</a><a class="btn primary" href="mawhiba-remote-trial-assessment.html">الخطوات المصوّرة ←</a></div>
+    <footer>الدليل الإرشادي لمقياس موهبة التجريبي</footer>
+  </main>`;
+  const style=`
+/* Original PDF manual viewer */
+.pdf-page-main{min-width:0}
+.pdf-reader-card{background:#fff;border:1px solid #dce6f3;border-radius:20px;padding:clamp(12px,2.3vw,24px);margin:24px 0;box-shadow:var(--shadow)}
+.pdf-reader-toolbar,.pdf-reader-controls,.pdf-reader-actions,.pdf-page-controls,.pdf-zoom-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pdf-reader-toolbar{justify-content:space-between;padding-bottom:15px;border-bottom:1px solid #e2eaf4}
+.pdf-reader-meta{display:grid;gap:4px}.pdf-reader-meta strong{font-size:16px;color:var(--navy)}.pdf-reader-meta span{font-size:13px;color:var(--muted)}
+.pdf-reader-controls{justify-content:space-between;padding:14px 2px}
+.pdf-page-counter{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13px}
+.pdf-page-counter input{width:64px;text-align:center;padding:7px 3px;border:1px solid #cbd8e8;border-radius:9px;font:inherit;color:var(--navy)}
+.pdf-zoom-controls{gap:7px}.pdf-zoom-controls span{font-size:13px;color:var(--navy);font-weight:800;min-width:45px;text-align:center}
+.pdf-reader-stage{background:#e9eef7;border:1px solid #dce6f3;border-radius:15px;min-height:540px;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px}
+#pdf-reader-canvas{display:block;max-width:none;background:#fff;box-shadow:0 8px 28px rgba(10,35,69,.2)}
+#pdf-reader-canvas[hidden],#pdf-reader-fallback[hidden],.pdf-reader-placeholder[hidden],.pdf-reader-controls[hidden]{display:none}
+#pdf-reader-fallback{width:100%;height:76vh;border:0;background:#fff}
+.pdf-reader-placeholder{align-self:center;max-width:540px;text-align:center;padding:35px 15px;color:#4a647d}
+.pdf-reader-placeholder h2{font-size:23px;margin:10px 0}.pdf-reader-placeholder p{font-size:15px;line-height:1.9}
+.pdf-placeholder-icon{display:inline-grid;place-items:center;width:76px;height:76px;background:#dfe8fc;border-radius:20px;color:#205bc3;font-size:34px}
+.pdf-file-picker{cursor:pointer;display:inline-flex;margin:8px}
+.pdf-privacy-note{color:#667a90;font-size:12px!important}
+.pdf-reader-loading{color:#5a6d82;font-size:13px;padding:9px 0}
+.pdf-reader-loading[hidden]{display:none}
+.pdf-reader-footnote{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:12px;font-size:12px;color:#637b90}
+#pdf-reader-error{color:#a12f3e}
+@media(max-width:650px){.pdf-reader-toolbar,.pdf-reader-controls{align-items:stretch;flex-direction:column}.pdf-reader-stage{min-height:360px;padding:8px}.pdf-page-controls{justify-content:center}.pdf-zoom-controls{justify-content:center}#pdf-reader-fallback{height:65vh}}
+`;
+  const script=String.raw`
+<script type="module">
+const assetUrl = "__PDF_ASSET_URL__";
+const $ = id => document.getElementById(id);
+const els = {
+  canvas:$("pdf-reader-canvas"), fallback:$("pdf-reader-fallback"),placeholder:$("pdf-reader-placeholder"),
+  controls:$("pdf-reader-controls"), loading:$("pdf-reader-loading"),error:$("pdf-reader-error"),
+  page:$("pdf-current-page"),pages:$("pdf-total-pages"),zoom:$("pdf-zoom-value"),
+  download:$("manual-pdf-download"),open:$("manual-pdf-open")
+};
+let pdfLib=null, documentRef=null,activeUrl="",localObjectUrl="",pageNumber=1,zoomLevel=1, renderToken=0;
+const pdfName="الدليل الارشادي لمقياس موهبة التجريبي.pdf";
+function displayLoading(message){els.loading.hidden=!message;els.loading.textContent=message||"";}
+async function showPage(){
+  if(!documentRef||!pdfLib)return;
+  const token=++renderToken;
+  els.error.textContent="";
+  displayLoading("جارٍ عرض الصفحة " + pageNumber + "…");
+  try{
+    const page=await documentRef.getPage(pageNumber);
+    if(token!==renderToken)return;
+    const desiredWidth=Math.max(270,Math.min(900,els.canvas.parentElement.clientWidth-30));
+    const initial=page.getViewport({scale:1});
+    const scale=(desiredWidth/initial.width)*zoomLevel;
+    const pixelRatio=Math.min(window.devicePixelRatio||1,2);
+    const viewport=page.getViewport({scale});
+    els.canvas.width=Math.round(viewport.width*pixelRatio);
+    els.canvas.height=Math.round(viewport.height*pixelRatio);
+    els.canvas.style.width=Math.round(viewport.width)+"px";
+    els.canvas.style.height=Math.round(viewport.height)+"px";
+    const ctx=els.canvas.getContext("2d");
+    await page.render({canvasContext:ctx,viewport,transform:pixelRatio===1?undefined:[pixelRatio,0,0,pixelRatio,0,0]}).promise;
+    if(token!==renderToken)return;
+    els.page.value=pageNumber;
+    els.zoom.textContent=Math.round(zoomLevel*100)+"%";
+    $("pdf-prev").disabled=pageNumber<=1;
+    $("pdf-next").disabled=pageNumber>=documentRef.numPages;
+    els.canvas.hidden=false;
+    els.fallback.hidden=true;
+  }catch(err){els.error.textContent="تعذر عرض الصفحة. افتح ملف PDF من الزر أعلاه.";}
+  finally{if(token===renderToken)displayLoading("");}
+}
+async function openPDF(source,fileUrl,isLocal=false){
+  els.error.textContent="";
+  displayLoading("جارٍ تحميل ملف الدليل…");
+  activeUrl=fileUrl;
+  try{
+    if(!pdfLib)pdfLib=await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.mjs");
+    pdfLib.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
+    documentRef=await pdfLib.getDocument(source).promise;
+    pageNumber=1;zoomLevel=1;
+    els.pages.textContent=String(documentRef.numPages);
+    els.controls.hidden=false;
+    els.placeholder.hidden=true;
+    els.download.hidden=false;
+    els.download.href=fileUrl;
+    els.download.download=pdfName;
+    els.open.hidden=false;
+    els.open.href=fileUrl;
+    await showPage();
+  }catch(err){
+    els.controls.hidden=true;els.canvas.hidden=true;
+    if(fileUrl){els.placeholder.hidden=true;els.fallback.hidden=false;els.fallback.src=fileUrl;els.download.hidden=false;els.download.href=fileUrl;els.download.download=pdfName;els.open.hidden=false;els.open.href=fileUrl;}
+    els.error.textContent="قد لا يدعم متصفحك التصفح المصور؛ استخدم «فتح الملف» أو «تنزيل PDF».";
+  }finally{displayLoading("");}
+}
+$("pdf-prev").addEventListener("click",()=>{if(pageNumber>1){pageNumber--;showPage();}});
+$("pdf-next").addEventListener("click",()=>{if(documentRef&&pageNumber<documentRef.numPages){pageNumber++;showPage();}});
+els.page.addEventListener("change",()=>{if(!documentRef)return;pageNumber=Math.max(1,Math.min(documentRef.numPages,Number(els.page.value)||1));showPage();});
+$("pdf-zoom-out").addEventListener("click",()=>{zoomLevel=Math.max(.55,Math.round((zoomLevel-.15)*100)/100);showPage();});
+$("pdf-zoom-in").addEventListener("click",()=>{zoomLevel=Math.min(2.5,Math.round((zoomLevel+.15)*100)/100);showPage();});
+$("manual-local-pdf").addEventListener("change",event=>{
+  const file=event.target.files?.[0];if(!file)return;
+  if(file.type!=="application/pdf"&&!file.name.toLowerCase().endsWith(".pdf")){els.error.textContent="اختر ملفًا بصيغة PDF.";return;}
+  if(localObjectUrl)URL.revokeObjectURL(localObjectUrl);
+  localObjectUrl=URL.createObjectURL(file);
+  openPDF(localObjectUrl,localObjectUrl,true);
+});
+if(assetUrl){openPDF(assetUrl,assetUrl,false);}else{displayLoading("");}
+</script>
+`.replace("__PDF_ASSET_URL__",hasPublishedPdf?pdfAssetPath:"");
+  const doc=original.replace(/<main>[\s\S]*?<\/main>/,main).replace("</style>",style+"\n</style>").replace("</body>",script+"\n</body>");
+  if(doc===original||!doc.includes('id="pdf-reader-canvas"'))throw Error("PDF reader generation failed");
+  if(doc.includes("manual-summary") && doc.includes("الصفحتان 1–2 من الملف"))throw Error("Old manual content was not removed");
+  fs.writeFileSync(target,doc,"utf8");
+  console.log("PDF-only manual tab generated; binary hosted:",hasPublishedPdf);
+})();
