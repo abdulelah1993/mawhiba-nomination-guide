@@ -1480,3 +1480,59 @@ if(assetUrl){openPDF(assetUrl,assetUrl,false);}else{displayLoading("");}
   fs.writeFileSync(target,doc,"utf8");
   console.log("PDF-only manual tab generated; binary hosted:",hasPublishedPdf);
 })();
+
+;(function showOfficialPDF() {
+ const id="1bOF7PUvFZg7_QUbEq2DgiXYjaS7QL1h2";
+ const view="https://drive.google.com/file/d/"+id+"/view?usp=sharing";
+ const embed="https://drive.google.com/file/d/"+id+"/preview";
+ const download="https://drive.google.com/uc?export=download&id="+id;
+ const filename="الدليل الارشادي لمقياس موهبة التجريبي";
+ const target=path.join(output,"manual.html");
+ if(!fs.existsSync(target))throw Error("Missing manual page");
+ const before=fs.readFileSync(target,"utf8");
+ const main=`<main class="official-pdf-main">
+   <section class="official-pdf-title">
+     <div><span class="eyebrow">الملف المعتمد · PDF</span>
+       <h1>${filename}</h1>
+       <p>استعرض صفحات الدليل مباشرة، دون الحاجة إلى رفع ملف من جهازك.</p>
+     </div>
+     <div class="official-pdf-actions">
+       <a class="btn primary" href="${view}" target="_blank" rel="noopener noreferrer">فتح الدليل في Google Drive ↗</a>
+       <a class="btn" href="${download}" target="_blank" rel="noopener noreferrer">تنزيل ملف PDF ↓</a>
+     </div>
+   </section>
+   <section class="official-pdf-card" aria-label="تصفح الدليل المعتمد">
+     <div class="official-pdf-info"><strong>استعراض ملف الدليل</strong><span>استخدم أدوات العرض للتنقل بين الصفحات والتكبير</span></div>
+     <iframe src="${embed}" title="${filename}" loading="eager" allow="fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+     <div class="official-pdf-fallback"><span>إذا تعذّر ظهور الصفحات، تحقق من صلاحية الوصول للملف أو افتحه في Google Drive.</span>
+       <a href="${view}" target="_blank" rel="noopener noreferrer">فتح الملف ↗</a></div>
+   </section>
+   <div class="pager"><a class="btn" href="index.html">الرئيسية</a><a class="btn primary" href="mawhiba-remote-trial-assessment.html">الخطوات المصوّرة ←</a></div>
+   <footer>الدليل الإرشادي لمقياس موهبة التجريبي</footer>
+ </main>`;
+ const styles=`
+/* Authoritative PDF manual from Google Drive. No local upload. */
+.official-pdf-main{min-width:0}
+.official-pdf-title{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:18px;border:1px solid #dce6f3;background:#fff;border-radius:20px;padding:clamp(17px,3vw,28px)}
+.official-pdf-title h1{font-size:clamp(23px,3vw,32px);color:var(--navy);margin:7px 0;line-height:1.5}
+.official-pdf-title p{margin:0;font-size:15px;line-height:1.9}
+.official-pdf-actions{display:flex;flex-wrap:wrap;gap:9px}
+.official-pdf-card{border:1px solid #dce6f3;background:#fff;padding:clamp(8px,2vw,18px);border-radius:20px;box-shadow:var(--shadow);margin:20px 0 26px}
+.official-pdf-info{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding:4px 6px 14px}
+.official-pdf-info strong{font-size:16px;color:var(--navy);font-weight:900}
+.official-pdf-info span,.official-pdf-fallback{font-size:13px;color:#647a90}
+.official-pdf-card iframe{display:block;width:100%;height:min(82vh,1100px);min-height:590px;border:0;background:#e8eef7;border-radius:13px}
+.official-pdf-fallback{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 6px 2px}
+.official-pdf-fallback a{font-weight:900;text-decoration:underline;color:var(--blue)}
+@media(max-width:700px){.official-pdf-title{padding:17px}.official-pdf-actions{width:100%}.official-pdf-actions .btn{flex:1;text-align:center;justify-content:center}.official-pdf-card iframe{height:70vh;min-height:450px}}
+`;
+ if(!/<main\b[^>]*>[\s\S]*?<\/main>/.test(before)) throw Error("Main tag not found");
+ let after=before.replace(/<main\b[^>]*>[\s\S]*?<\/main>/,main)
+   .replace(/<script type="module">\s*const assetUrl =[\s\S]*?<\/script>/,"")
+   .replace("</style>",styles+"\n</style>");
+ if(!after.includes(`src="${embed}"`))throw Error("Preview not inserted");
+ if(after.includes('id="manual-local-pdf"')||after.includes('id="pdf-reader-placeholder"'))throw Error("Old file upload UI not removed");
+ if(after.includes("const assetUrl = "))throw Error("Old module listener wasn't removed");
+ fs.writeFileSync(target,after,"utf8");
+ console.log("Official manual now embedded from Google Drive");
+})();
