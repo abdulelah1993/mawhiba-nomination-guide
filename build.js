@@ -1196,3 +1196,86 @@ console.log("تم إنشاء الصفحات السبع داخل dist/");
   fs.writeFileSync(path.join(output, introFilename), intro, "utf8");
   console.log("Introductory meeting section generated: /intro.html", driveId ? "(video configured)" : "(awaiting Drive video link)");
 })();
+
+;(function addDocumentGuideTab(){
+ const name="الدليل الارشادي لمقياس موهبة التجريبي", filename="manual.html";
+ const nav=`<a class="nav-link manual-nav-link" href="${filename}" title="${name}.pdf"><span class="icon" aria-hidden="true">▤</span><span>${name}</span></a>`;
+ const styles=`
+.manual-nav-link span:last-child{white-space:normal;line-height:1.7}
+.manual-pane{background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:clamp(16px,3vw,28px);margin:23px 0}
+.manual-pane h2{font-size:23px;margin:0 0 12px}.manual-pane p,.manual-pane li{font-size:16px;line-height:1.9}
+.manual-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.manual-summary>div{border:1px solid #dde7f4;background:#f8faff;border-radius:13px;padding:16px}
+.manual-summary strong{font-size:17px;color:var(--navy)}
+.manual-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.manual-tags a{border:1px solid #dce5f3;background:#eef3fe;padding:8px 12px;border-radius:11px;font-size:13px;font-weight:800}
+.manual-block{scroll-margin-top:95px}
+.manual-steps .step{margin:14px 0}
+.manual-pane .manual-source{font-size:13px;color:#557185;font-weight:800}
+@media(max-width:700px){.manual-summary{grid-template-columns:1fr}.manual-pane{padding:16px}}
+`;
+ const grouped=[
+  ["تسجيل الدخول",1,7],["تهيئة الجهاز والأذونات",8,13],
+  ["فحص الصوت والتحقق من الطالب",14,18],["أداء المقياس والتسليم",19,21]
+ ];
+ const requirements=[
+  ["الجهاز","كمبيوتر بنظام ويندوز أو ماك، وذاكرة 4 جيجابايت"],
+  ["المتصفح","Google Chrome"],
+  ["الكاميرا والميكروفون","كاميرا ويب وميكروفون يعملان بشكل سليم"],
+  ["الإنترنت","اتصال مستقر، والحد الأدنى للسرعة 1 ميجابايت في الثانية حسب الدليل"]
+ ];
+ const rules=["عدم استخدام الجوال","عدم استخدام سماعات الرأس أو الآلة الحاسبة","عدم فتح نوافذ أو تطبيقات أخرى أثناء الاختبار","عدم حجب الكاميرا أو الخروج من نطاقها أو إغلاق الميكروفون","عدم الاستعانة بأشخاص أو تقنيات للإجابة"];
+ const contents=`<main>
+ <section class="hero"><span class="eyebrow">نسخة إلكترونية من الدليل المرفق</span><h1>${name}</h1>
+ <p>استعرض التعليمات والتهيئة والمخالفات وخطوات الدخول والأداء الـ21 بصورها، كما وردت في الملف الإرشادي.</p></section>
+ <div class="manual-tags"><a href="#manual-overview">نظرة عامة</a><a href="#manual-requirements">المتطلبات</a><a href="#manual-rules">المخالفات</a><a href="#manual-faq">حل المشكلات</a><a href="#manual-steps">الخطوات المصورة</a></div>
+ <section id="manual-overview" class="manual-pane manual-block"><div class="manual-source">الصفحتان 1–2 من الملف</div>
+ <h2>مسار الطالب من البداية إلى التسليم</h2>
+ <div class="manual-summary"><div><strong>1. جهّز جهازك</strong><p>تأكد من جاهزية الجهاز والكاميرا والميكروفون وChrome والإنترنت.</p></div>
+ <div><strong>2. سجّل الدخول</strong><p>افتح المنصة، وتحقق من الهوية، واختر الاختبار بحسب التخصص.</p></div>
+ <div><strong>3. أكمل التحقق</strong><p>فعّل مشاركة الشاشة والكاميرا والميكروفون، وأكمل الفحص.</p></div>
+ <div><strong>4. أدِّ المقياس</strong><p>أجب عن الأسئلة وراجع الإجابات ثم أكّد التسليم.</p></div></div></section>
+ <section id="manual-requirements" class="manual-pane manual-block"><div class="manual-source">الصفحتان 3–4 من الملف</div><h2>متطلبات الاختبار والأذونات</h2>
+ <div class="manual-summary">${requirements.map(p=>`<div><strong>${p[0]}</strong><p>${p[1]}</p></div>`).join("")}</div>
+ <p>فعّل مشاركة الشاشة كاملة، وامنح أذونات الكاميرا والميكروفون، وأكمل فحص الصوت قبل أداء المقياس.</p></section>
+ <section id="manual-rules" class="manual-pane manual-block"><div class="manual-source">الصفحة 5 من الملف</div><h2>المخالفات التي قد تستوجب حجب النتيجة</h2><ul>${rules.map(v=>`<li>${v}</li>`).join("")}</ul></section>
+ <section id="manual-faq" class="manual-pane manual-block"><div class="manual-source">الصفحات 6–8 من الملف</div><h2>حل المشكلات والدعم الفني</h2>
+ <p>عند مواجهة مشكلة بالكاميرا أو الميكروفون، راجع أذونات المتصفح وأعد تشغيله. وإذا انقطع الإنترنت، أعد الاتصال وسجّل الدخول مجددًا.</p>
+ <p>للدعم الفني: <a href="mailto:gig@mawhiba.org.sa">gig@mawhiba.org.sa</a> — أرفق الاسم والهوية ووصف المشكلة وصورتها.</p>
+ <a class="btn primary" href="help.html#support-request">فتح نموذج الدعم الفني</a></section>
+ <section id="manual-steps" class="manual-pane manual-block"><div class="manual-source">الصفحات 9–27 من الملف</div><h2>خطوات الدخول وأداء المقياس</h2>
+ <p>الخطوات الـ21 وصورها التوضيحية من الدليل.</p>
+ ${grouped.map(group=>`<section class="manual-block"><h2>${group[0]}: ${group[1]}–${group[2]}</h2>
+ <div class="manual-steps">${steps.filter(step=>step[0]>=group[1]&&step[0]<=group[2]).map(renderStep).join("")}</div></section>`).join("")}
+ <p class="manual-source">نسخة ويب مقروءة من محتوى الملف المرفق، وليست ملف PDF الأصلي بتنسيق صفحاته.</p></section>
+ <div class="pager"><a class="btn" href="index.html">الرئيسية</a><a class="btn primary" href="mawhiba-remote-trial-assessment.html">خطوات المقياس ←</a></div>
+ <footer>الدليل الإرشادي لمقياس موهبة التجريبي</footer></main>`;
+ const names=["index.html","before.html","mawhiba-remote-trial-assessment.html","intro.html","help.html"];
+ const source=path.join(output,"intro.html");
+ if(!fs.existsSync(source))throw Error("Intro page missing");
+ const activeIntro=`<a class="nav-link active" href="intro.html" aria-current="page">`;
+ let base=fs.readFileSync(source,"utf8");
+ const navPattern=/(<a class="nav-link[^"]*" href="intro\.html"[^>]*>[\s\S]*?<\/a>)/;
+ if(!navPattern.test(base))throw Error("Intro nav not found");
+ for(const n of names){
+  const dest=path.join(output,n);
+  if(!fs.existsSync(dest))throw Error("Missing page "+n);
+  let h=fs.readFileSync(dest,"utf8");
+  if(!navPattern.test(h))throw Error("Missing nav on "+n);
+  h=h.replace(navPattern,m=>m+"\n"+nav).replace("</style>",styles+"\n</style>");
+  if(n==="index.html"){
+   const anchor='<a class="card intro-home-card" href="intro.html">';
+   if(!h.includes(anchor))throw Error("Home cards anchor missing");
+   h=h.replace(anchor,`<a class="card" href="${filename}"><span class="symbol">▤</span><h2>${name}</h2><p>المتطلبات والخطوات الـ21 كما وردت في الملف الإرشادي.</p><span class="range">عرض الدليل</span></a>\n`+anchor);
+  }
+  fs.writeFileSync(dest,h,"utf8");
+ }
+ let doc=fs.readFileSync(source,"utf8");
+ if(!doc.includes(activeIntro))throw Error("Active intro nav missing");
+ doc=doc.replace(activeIntro,'<a class="nav-link " href="intro.html">');
+ doc=doc.replace(`<a class="nav-link manual-nav-link" href="${filename}"`, `<a class="nav-link manual-nav-link active" aria-current="page" href="${filename}"`);
+ doc=doc.replace(/<main>[\s\S]*?<\/main>/,contents).replace(/<title>[^<]*<\/title>/,`<title>${name} | موهبة</title>`);
+ if(!doc.includes('id="step-21"'))throw Error("No steps in manual");
+ fs.writeFileSync(path.join(output,filename),doc,"utf8");
+ console.log("New manual tab: "+filename);
+})();
