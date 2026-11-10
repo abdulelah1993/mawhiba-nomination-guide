@@ -939,11 +939,11 @@ function renderPage(page, index) {
         </div>
       </article>
       <article class="countdown-card" data-countdown="actual"
-        data-start="2026-11-11T19:30:00+03:00" data-end="2026-11-11T23:30:00+03:00">
+        data-start="2026-11-11T16:30:00+03:00" data-end="2026-11-11T20:30:00+03:00">
         <div class="countdown-card-head"><span class="countdown-tag countdown-tag--actual">الاختبار الفعلي</span><span class="countdown-status" role="status">جارٍ الحساب</span></div>
         <h3>مقياس موهبة التجريبي</h3>
         <p>الأربعاء 11 نوفمبر 2026</p>
-        <p class="countdown-window">7:30 – 11:30 مساءً</p>
+        <p class="countdown-window">4:30 – 8:30 مساءً</p>
         <div class="countdown-units" aria-label="الوقت المتبقي">
           <div><strong data-unit="days">00</strong><span>يوم</span></div>
           <div><strong data-unit="hours">00</strong><span>ساعة</span></div>
