@@ -1504,3 +1504,108 @@ if(assetUrl){openPDF(assetUrl,assetUrl,false);}else{displayLoading("");}
  fs.writeFileSync(target,after,"utf8");
  console.log("Official manual now embedded from Google Drive");
 })();
+
+;(function installRulesTab(){
+  const rules=[
+   ["الاختبار بالكمبيوتر أو اللابتوب فقط","laptop",false],
+   ["منع استخدام الحاسبة والسماعات والجوال","devices",true],
+   ["أداء الاختبار منفردًا دون مساعدة","single",false],
+   ["عدم فتح تطبيقات أو نوافذ أخرى","windows",true],
+   ["إبقاء الكاميرا والميكروفون مفعلين","camera",false],
+   ["إظهار الوجه واليدين بوضوح أمام الكاميرا","face",false],
+   ["عدم مغادرة المكان أو نطاق الكاميرا","location",false],
+   ["تجنب التحدث والالتفاتات المتكررة","talk",true],
+   ["منع الأجهزة الإضافية والكتب والمذكرات","books",true],
+   ["عدم تصوير الأسئلة أو تسجيل الشاشة","record",true],
+   ["منع تدخل الآخرين بالجهاز أو الإجابة","people",true],
+   ["عدم تغيير الجهاز أو تعطيل المراقبة","system",true]
+  ];
+  const icons={
+    laptop:'<rect x="12" y="12" width="40" height="29" rx="3"/><path d="M7 47h50l-5-6H12Z"/>',
+    devices:'<path d="M6 29v-9a12 12 0 0 1 24 0v9M6 27H3v10h7V27M30 27h4v10h-7V27M39 13h21v34H39zM46 39h7M46 19h7"/>',
+    single:'<circle cx="25" cy="18" r="10"/><path d="M5 50c0-11 8-18 20-18m26 7a11 11 0 1 0-1 20 11 11 0 0 0 1-20ZM44 48l5 4 7-8"/>',
+    windows:'<rect x="8" y="12" width="48" height="40" rx="4"/><path d="M8 22h48M16 17h3M24 17h3"/>',
+    camera:'<rect x="3" y="14" width="35" height="28" rx="4"/><circle cx="20" cy="28" r="9"/><path d="m38 22 11-7v26l-11-7M55 12v27m-7-8a7 7 0 0 0 14 0M55 47v8"/>',
+    face:'<path d="M8 20V7h14m20 0h14v13M56 44v13H42M22 57H8V44"/><circle cx="32" cy="27" r="11"/><path d="M15 51c3-11 11-16 17-16s14 5 17 16"/>',
+    location:'<circle cx="19" cy="12" r="6"/><path d="m18 20 12 12-8 17M13 31l-7 15m23-15 10-6M47 16h10v33H47M37 33h15m-5-5 5 5-5 5"/>',
+    talk:'<path d="M10 13h44a7 7 0 0 1 7 7v17a7 7 0 0 1-7 7H29L16 53v-9h-6a7 7 0 0 1-7-7V20a7 7 0 0 1 7-7ZM18 29h3m11 0h3m11 0h3"/>',
+    books:'<path d="m6 19 26-13 26 13-26 13L6 19Zm0 0v11l26 14 26-14V19M6 32v10l26 14 26-14V32"/>',
+    record:'<rect x="6" y="10" width="52" height="44" rx="4"/><circle cx="32" cy="32" r="12"/><path d="M13 10V5h10M46 5h12"/>',
+    people:'<circle cx="20" cy="19" r="9"/><circle cx="45" cy="19" r="9"/><path d="M4 51c0-10 7-18 16-18s16 8 16 18m-7 0c0-10 7-18 16-18s16 8 16 18"/>',
+    system:'<rect x="6" y="8" width="52" height="42" rx="4"/><circle cx="32" cy="28" r="10"/><path d="M32 14v5m0 18v5M18 28h5m18 0h5M21 18l4 4m18 14-4-4M39 22l4-4M21 38l4-5M2 56h60"/>'
+  };
+  const cards=rules.map(([label,icon,prohibited],n)=>`<article class="rules-exam-card">
+    <span class="rules-exam-number">${n+1}</span>
+    <div class="rules-exam-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${icons[icon]}</svg>${prohibited?'<b class="rules-exam-cross">×</b>':""}</div>
+    <h2>${label}</h2>
+  </article>`).join("\n");
+  const content=`<main class="rules-exam-page">
+    <section class="rules-exam-hero">
+      <span class="eyebrow">قبل بدء الاختبار</span>
+      <h1>تعليمات الاختبار</h1>
+      <p>يرجى الالتزام بالتعليمات التالية أثناء أداء مقياس موهبة التجريبي عن بُعد.</p>
+    </section>
+    <section class="rules-exam-grid" aria-label="تعليمات الاختبار الـ١٢">${cards}</section>
+    <div class="rules-exam-note" role="note">
+      <svg width="38" height="38" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="7" width="32" height="26" rx="3"/><path d="M3 38h38M14 20l6 6 11-12"/></svg>
+      <strong>تأكد من جاهزية الجهاز والإنترنت والمكان الهادئ.</strong>
+    </div>
+    <div class="rules-exam-next"><p>بعد مراجعة التعليمات، تابع خطوات الدخول وأداء المقياس.</p>
+      <a class="btn primary" href="mawhiba-remote-trial-assessment.html">الانتقال إلى خطوات الدخول وأداء المقياس ←</a></div>
+    <div class="pager"><a class="btn" href="before.html">السابق: قبل الاختبار</a>
+      <a class="btn primary" href="mawhiba-remote-trial-assessment.html">التالي: خطوات المقياس ←</a></div>
+    <footer>الدليل الإرشادي لمقياس موهبة التجريبي</footer>
+  </main>`;
+  const css=`
+/* Student's 12-image rules, displayed as readable responsive cards */
+.rules-exam-page{min-width:0}
+.rules-exam-hero{background:linear-gradient(135deg,#fff,#f8f5fd);border:1px solid #e7e0f2;border-radius:20px;padding:clamp(18px,3vw,29px);margin-bottom:19px}
+.rules-exam-hero h1{margin:8px 0;font-size:clamp(26px,3vw,36px);color:var(--navy)}
+.rules-exam-hero p{margin:0;line-height:1.85;font-size:16px}
+.rules-exam-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.rules-exam-card{position:relative;min-width:0;min-height:190px;background:linear-gradient(150deg,#fcfbff,#f3eff8);border:1px solid #eae4f3;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:25px 13px 17px}
+.rules-exam-number{position:absolute;right:0;top:0;background:#6d5099;color:#fff;font-weight:900;font-size:21px;padding:9px 17px;border-radius:0 0 0 23px}
+.rules-exam-icon{width:74px;height:66px;position:relative;display:grid;place-items:center;color:#3e2d5d}
+.rules-exam-icon svg{width:60px;height:60px}
+.rules-exam-cross{position:absolute;left:0;bottom:0;display:grid;place-items:center;width:23px;height:23px;border-radius:50%;border:3px solid #fff;background:#e2666c;color:#fff;font-size:22px;line-height:1}
+.rules-exam-card h2{margin:9px 0 0;line-height:1.55;font-size:clamp(15px,1.5vw,19px);font-weight:900;color:#302144}
+.rules-exam-note{display:flex;gap:18px;align-items:center;justify-content:center;text-align:center;background:linear-gradient(120deg,#684b92,#8864b0);color:#fff;padding:17px 22px;margin-top:23px;border-radius:999px}
+.rules-exam-note strong{font-size:clamp(15px,2vw,21px);line-height:1.6}
+.rules-exam-note svg{flex:none}
+.rules-exam-next{padding:20px 24px;margin:20px 0;border:1px solid #e2e8f1;border-radius:17px;background:#fff}
+.rules-exam-next p{margin:0 0 13px}
+.rules-exam-home-card{border-color:#ded5ef;background:linear-gradient(120deg,#fff,#faf7ff)}
+@media(max-width:1100px){.rules-exam-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.rules-exam-grid{grid-template-columns:1fr;gap:10px}.rules-exam-card{min-height:155px}.rules-exam-note{border-radius:16px;padding:14px;gap:10px}.rules-exam-note svg{width:30px;height:30px}.rules-exam-next{padding:17px}}
+`;
+  const files=["index.html","before.html","mawhiba-remote-trial-assessment.html","help.html","intro.html","manual.html"];
+  const navEntry='<a class="nav-link exam-rules-nav" href="instructions.html"><span class="icon">▤</span><span>تعليمات الاختبار</span></a>\n        ';
+  const navTarget=/<a class="nav-link [^"]*"\s+href="mawhiba-remote-trial-assessment\.html"/g;
+  for(const name of files){
+    const p=path.join(output,name);
+    if(!fs.existsSync(p))throw Error("Missing "+name);
+    let html=fs.readFileSync(p,"utf8");
+    const matches=[...html.matchAll(navTarget)];
+    if(matches.length!==1)throw Error("Expected one steps sidebar link on "+name+", found "+matches.length);
+    html=html.replace(navTarget,navEntry+matches[0][0]);
+    if(!html.includes("</style>"))throw Error("No CSS marker on "+name);
+    html=html.replace("</style>",css+"\n</style>");
+    if(name==="index.html"){
+      const target='<a class="card" href="mawhiba-remote-trial-assessment.html">';
+      if(html.split(target).length!==2)throw Error("No unique home card anchor");
+      html=html.replace(target,`<a class="card rules-exam-home-card" href="instructions.html"><span class="symbol">▤</span><h2>تعليمات الاختبار</h2><p>١٢ تعليمًا للمقياس المراقب عن بُعد.</p><span class="range">الاطلاع على التعليمات</span></a>\n`+target);
+    }
+    fs.writeFileSync(p,html,"utf8");
+  }
+  let doc=fs.readFileSync(path.join(output,"before.html"),"utf8");
+  if(!/<main\b[^>]*>[\s\S]*?<\/main>/.test(doc))throw Error("Main page not found");
+  doc=doc.replace(/<main\b[^>]*>[\s\S]*?<\/main>/,content);
+  doc=doc.replace(/<a class="nav-link active"\s+href="before\.html"\s+aria-current="page">/,'<a class="nav-link "\n           href="before.html">');
+  const originalNav='<a class="nav-link exam-rules-nav" href="instructions.html">';
+  if(!doc.includes(originalNav))throw Error("New navigation link missing");
+  doc=doc.replace(originalNav,'<a class="nav-link active exam-rules-nav" aria-current="page" href="instructions.html">');
+  doc=doc.replace(/<title>[^<]*<\/title>/,'<title>تعليمات الاختبار | دليل مقياس موهبة التجريبي</title>');
+  if(!doc.includes('class="rules-exam-grid"')||(doc.match(/<article class="rules-exam-card">/g)||[]).length!==12)throw Error("Instructions page incomplete");
+  fs.writeFileSync(path.join(output,"instructions.html"),doc,"utf8");
+  console.log("Created instructions tab and 12 guidance cards");
+})();
